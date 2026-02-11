@@ -168,7 +168,6 @@ export default function HeroSequence() {
                 <div ref={overlayRef} className="pointer-events-none absolute inset-0 w-full h-full z-10">
                     <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#050505] to-transparent" />
                     <div className="absolute bottom-12 md:bottom-20 left-0 w-full px-6 md:px-16 z-20 flex flex-col items-start gap-4 md:gap-5">
-                        <NextImage src="/logo.png" alt="Pi MEDIA" width={320} height={200} className="brightness-110 drop-shadow-[0_0_40px_rgba(255,32,32,0.35)] w-[150px] sm:w-[200px] md:w-[250px] lg:w-[320px]" priority />
                         <span className="font-[family-name:var(--font-heading)] text-[#f5f5f5]/40 text-xs sm:text-sm md:text-lg lg:text-2xl font-medium tracking-[0.15em] md:tracking-[0.2em] uppercase">
                             IJTIMOIY TARMOQ MUTAXASSISI
                         </span>

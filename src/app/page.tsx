@@ -15,7 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
    ══════════════════════════════════════════════════════ */
 function Navbar() {
   return (
-    <nav className="fixed top-0 left-0 w-full z-40 px-4 md:px-16 py-3 md:py-4 flex items-center justify-between
+    <nav className="fixed top-0 left-0 w-full z-40 px-6 md:px-12 py-3 md:py-4 flex items-center justify-end
                     bg-[#050505]/80 backdrop-blur-md border-b border-[#f5f5f5]/5">
       <a
         href="#contact"
@@ -206,7 +206,7 @@ export default function Home() {
       <HeroSequence />
 
       {/* ═══════ 1-QISM — ASOSIY SARLAVHA ═══════ */}
-      <section className="relative z-20 py-24 md:py-48 px-6 md:px-20 lg:px-32">
+      <section className="relative z-20 py-24 md:py-48 px-6 md:px-12 max-w-[1400px] mx-auto">
         <KineticText
           lines={["NATIJA", "BO'LMAGUNCHA", "XIZMAT", "QILAMIZ."]}
           className="mb-10"
@@ -231,7 +231,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
-      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[1] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             Biz bilan ishlagan <span className="text-[#FF2020]">hamkorlar</span>
@@ -249,7 +249,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 3-QISM — BIZ KIMLAR BILAN ISHLAYMIZ ═══════ */}
-      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[2] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             Biz kimlar bilan <span className="text-[#FF2020]">ishlaymiz</span>
@@ -304,7 +304,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 4-QISM — BIZ ISHLAYDIGAN SOHALAR ═══════ */}
-      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[3] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6">
             Biz ishlaydigan <span className="text-[#FF2020]">sohalar</span>
@@ -323,7 +323,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 5-QISM — UCHRASHUV BELGILASH ═══════ */}
-      <section id="contact" className="relative z-20 py-24 md:py-44 px-6 md:px-20 lg:px-32">
+      <section id="contact" className="relative z-20 py-24 md:py-44 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[4] = el; }} className="max-w-3xl mx-auto text-center">
           <KineticText
             lines={["HAMKORLIK UCHUN", "UCHRASHUV", "BELGILAYMIZMI?"]}
@@ -340,7 +340,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 6-QISM — QANDAY TARTIBDA ISHLAYMIZ ═══════ */}
-      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[5] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-8 md:mb-12">
             Qanday tartibda <span className="text-[#FF2020]">ishlaymiz</span>
@@ -363,7 +363,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 7-QISM — NATIJALAR ═══════ */}
-      <section id="results" className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
+      <section id="results" className="relative z-20 py-20 md:py-40 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[6] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             <span className="text-[#FF2020]">Natijalar</span>
@@ -395,7 +395,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 8-QISM — XIZMATLAR ═══════ */}
-      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[7] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-8 md:mb-12">
             <span className="text-[#FF2020]">Xizmatlar</span>
@@ -413,7 +413,7 @@ export default function Home() {
 
       {/* ═══════ 9-QISM — HAMKORLAR CAROUSEL (infinite marquee) ═══════ */}
       <section className="relative z-20 py-20 md:py-40 overflow-hidden">
-        <div className="px-6 md:px-20 lg:px-32 mb-8 md:mb-12">
+        <div className="px-6 md:px-12 max-w-[1400px] mx-auto mb-8 md:mb-12">
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             <span className="text-[#FF2020]">Hamkorlarimiz</span>
           </h2>
@@ -439,7 +439,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 10-QISM — FINAL CTA ═══════ */}
-      <section className="relative z-20 py-28 md:py-56 px-6 md:px-20 lg:px-32 text-center">
+      <section className="relative z-20 py-28 md:py-56 px-6 md:px-12 max-w-[1400px] mx-auto text-center">
         <div ref={(el) => { fadeRefs.current[8] = el; }}>
           <KineticText lines={["SMM ORQALI", "BIZNESINGIZNI", "O'STIRISHGA", "TAYYORMISIZ?"]} />
           <div className="mt-8 md:mt-12">
