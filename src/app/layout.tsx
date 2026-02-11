@@ -39,8 +39,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="uz" className="noise-overlay">
-      <body className={`${oswald.variable} ${inter.variable} antialiased`}>
+    <html lang="uz" className="noise-overlay" suppressHydrationWarning>
+      <body className={`${oswald.variable} ${inter.variable} antialiased`} suppressHydrationWarning>
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
