@@ -140,7 +140,7 @@ export default function HeroSequence() {
             {/* Loading Screen */}
             {!loaded && (
                 <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050505]">
-                    <NextImage src="/logo.png" alt="Pi MEDIA" width={160} height={100} className="mb-4 brightness-110" priority />
+                    <NextImage src="/logo.png" alt="Pi MEDIA" width={120} height={75} className="mb-4 brightness-110 w-[100px] md:w-[120px]" priority />
                     <div className="mb-6 font-[family-name:var(--font-body)] text-sm text-[#f5f5f5]/40 tracking-[0.3em]">
                         YUKLANMOQDA...
                     </div>
@@ -167,9 +167,9 @@ export default function HeroSequence() {
                 {/* Gradient + Text Overlay — inside the pinned wrapper, so it unpins with canvas */}
                 <div ref={overlayRef} className="pointer-events-none absolute inset-0 w-full h-full z-10">
                     <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#050505] to-transparent" />
-                    <div className="absolute bottom-16 left-0 w-full px-6 md:px-16 z-20 flex items-end gap-6">
-                        <NextImage src="/logo.png" alt="Pi MEDIA" width={200} height={125} className="brightness-110 drop-shadow-[0_0_30px_rgba(255,32,32,0.3)]" priority />
-                        <span className="font-[family-name:var(--font-heading)] text-[#f5f5f5]/50 text-lg md:text-2xl lg:text-3xl font-medium tracking-[0.15em] uppercase mb-2">
+                    <div className="absolute bottom-10 md:bottom-16 left-0 w-full px-4 md:px-16 z-20 flex flex-col sm:flex-row items-start sm:items-end gap-3 sm:gap-6">
+                        <NextImage src="/logo.png" alt="Pi MEDIA" width={200} height={125} className="brightness-110 drop-shadow-[0_0_30px_rgba(255,32,32,0.3)] w-[100px] md:w-[160px] lg:w-[200px]" priority />
+                        <span className="font-[family-name:var(--font-heading)] text-[#f5f5f5]/50 text-sm md:text-xl lg:text-3xl font-medium tracking-[0.1em] md:tracking-[0.15em] uppercase sm:mb-2">
                             IJTIMOIY TARMOQ MUTAXASSISI
                         </span>
                     </div>

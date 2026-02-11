@@ -15,11 +15,12 @@ gsap.registerPlugin(ScrollTrigger);
    ══════════════════════════════════════════════════════ */
 function Navbar() {
   return (
-    <nav className="fixed top-0 left-0 w-full z-40 px-6 md:px-16 py-4 flex items-center justify-between bg-gradient-to-b from-[#050505] to-transparent">
-      <Image src="/logo.png" alt="Pi MEDIA" width={80} height={50} className="brightness-110" priority />
+    <nav className="fixed top-0 left-0 w-full z-40 px-4 md:px-16 py-3 md:py-4 flex items-center justify-between
+                    bg-[#050505]/80 backdrop-blur-md border-b border-[#f5f5f5]/5">
+      <Image src="/logo.png" alt="Pi MEDIA" width={60} height={38} className="brightness-110 w-[50px] md:w-[60px]" priority />
       <a
         href="#contact"
-        className="font-[family-name:var(--font-heading)] text-xs md:text-sm uppercase tracking-[0.2em] px-6 py-3
+        className="font-[family-name:var(--font-heading)] text-[10px] md:text-sm uppercase tracking-[0.15em] md:tracking-[0.2em] px-4 md:px-6 py-2 md:py-3
                    border border-[#FF2020]/40 text-[#FF2020] hover:bg-[#FF2020] hover:text-[#050505]
                    transition-all duration-400"
       >
@@ -29,36 +30,7 @@ function Navbar() {
   );
 }
 
-/* ══════════════════════════════════════════════════════
-   COUNTER HOOK
-   ══════════════════════════════════════════════════════ */
-function useCounterAnimation(
-  ref: React.RefObject<HTMLSpanElement | null>,
-  target: number,
-  suffix: string = ""
-) {
-  useEffect(() => {
-    if (!ref.current) return;
-    const el = ref.current;
-    const ctx = gsap.context(() => {
-      const counter = { value: 0 };
-      gsap.to(counter, {
-        value: target,
-        duration: 2,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: el,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-        onUpdate: () => {
-          el.textContent = Math.floor(counter.value) + suffix;
-        },
-      });
-    });
-    return () => ctx.revert();
-  }, [ref, target, suffix]);
-}
+/* (Counter hook removed — not used in v2) */
 
 /* ══════════════════════════════════════════════════════
    PARTNER LOGO (placeholder circle)
@@ -115,8 +87,8 @@ function ProcessStep({ step, title }: { step: number; title: string }) {
   useEffect(() => {
     if (!ref.current) return;
     const ctx = gsap.context(() => {
-      gsap.fromTo(ref.current, { xPercent: -30, opacity: 0 }, {
-        xPercent: 0, opacity: 1, ease: "power3.out",
+      gsap.fromTo(ref.current, { yPercent: 20, opacity: 0 }, {
+        yPercent: 0, opacity: 1, ease: "power3.out",
         scrollTrigger: { trigger: ref.current, start: "top 85%", toggleActions: "play none none none" },
       });
     });
@@ -234,7 +206,7 @@ export default function Home() {
       <HeroSequence />
 
       {/* ═══════ 1-QISM — ASOSIY SARLAVHA ═══════ */}
-      <section className="relative z-20 py-28 md:py-44 px-6 md:px-16 lg:px-24">
+      <section className="relative z-20 py-20 md:py-44 px-4 md:px-16 lg:px-24">
         <KineticText
           lines={["NATIJA", "BO'LMAGUNCHA", "XIZMAT", "QILAMIZ."]}
           className="mb-10"
@@ -243,14 +215,14 @@ export default function Home() {
           <p className="font-[family-name:var(--font-body)] text-base md:text-lg text-[#f5f5f5]/50 leading-relaxed">
             Bizneslarni ijtimoiy tarmoqlarda sotuvlarini barqaror o&apos;sishiga yordam beramiz.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a href="#contact" className="inline-block px-8 py-4 bg-[#FF2020] text-[#050505]
-                       font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-[0.15em]
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <a href="#contact" className="inline-block text-center px-6 md:px-8 py-3 md:py-4 bg-[#FF2020] text-[#050505]
+                       font-[family-name:var(--font-heading)] text-xs md:text-sm font-bold uppercase tracking-[0.15em]
                        hover:bg-[#f5f5f5] transition-colors duration-500 box-glow">
               Audit tekshiruvi olish
             </a>
-            <a href="#results" className="inline-block px-8 py-4 border border-[#FF2020]/40 text-[#FF2020]
-                       font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-[0.15em]
+            <a href="#results" className="inline-block text-center px-6 md:px-8 py-3 md:py-4 border border-[#FF2020]/40 text-[#FF2020]
+                       font-[family-name:var(--font-heading)] text-xs md:text-sm font-bold uppercase tracking-[0.15em]
                        hover:bg-[#FF2020] hover:text-[#050505] transition-all duration-500">
               Natijalar
             </a>
@@ -259,15 +231,15 @@ export default function Home() {
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
-      <section className="relative z-20 py-24 md:py-36 px-6 md:px-16 lg:px-24">
+      <section className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
         <div ref={(el) => { fadeRefs.current[1] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             Biz bilan ishlagan <span className="text-[#FF2020]">hamkorlar</span>
           </h2>
           <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-12 max-w-xl">
             Biz turli sohalardagi bizneslar bilan samarali hamkorlik qilganmiz.
           </p>
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4 md:gap-8">
             {["01", "02", "03", "04", "05", "06", "07", "08"].map((n) => (
               <PartnerCircle key={n} name={n} />
             ))}
@@ -277,9 +249,9 @@ export default function Home() {
       </section>
 
       {/* ═══════ 3-QISM — BIZ KIMLAR BILAN ISHLAYMIZ ═══════ */}
-      <section className="relative z-20 py-24 md:py-36 px-6 md:px-16 lg:px-24">
+      <section className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
         <div ref={(el) => { fadeRefs.current[2] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             Biz kimlar bilan <span className="text-[#FF2020]">ishlaymiz</span>
           </h2>
           <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-12 max-w-xl">
@@ -351,16 +323,16 @@ export default function Home() {
       </section>
 
       {/* ═══════ 5-QISM — UCHRASHUV BELGILASH ═══════ */}
-      <section id="contact" className="relative z-20 py-28 md:py-40 px-6 md:px-16 lg:px-24">
+      <section id="contact" className="relative z-20 py-20 md:py-40 px-4 md:px-16 lg:px-24">
         <div ref={(el) => { fadeRefs.current[4] = el; }} className="max-w-3xl mx-auto text-center">
           <KineticText
             lines={["HAMKORLIK UCHUN", "UCHRASHUV", "BELGILAYMIZMI?"]}
           />
-          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mt-8 mb-10">
+          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mt-6 md:mt-8 mb-8 md:mb-10">
             Qisqa registratsiya qoldiring — biznesingizni tahlil qilib, aniq reja beramiz.
           </p>
-          <a href="#contact-form" className="inline-block px-12 md:px-16 py-5 md:py-6 bg-[#FF2020] text-[#050505]
-                     font-[family-name:var(--font-heading)] text-base md:text-lg font-bold uppercase tracking-[0.2em]
+          <a href="#contact-form" className="inline-block px-8 md:px-16 py-4 md:py-6 bg-[#FF2020] text-[#050505]
+                     font-[family-name:var(--font-heading)] text-sm md:text-lg font-bold uppercase tracking-[0.15em] md:tracking-[0.2em]
                      hover:bg-[#f5f5f5] transition-colors duration-500 box-glow-strong">
             Registratsiya qilish
           </a>
@@ -368,12 +340,12 @@ export default function Home() {
       </section>
 
       {/* ═══════ 6-QISM — QANDAY TARTIBDA ISHLAYMIZ ═══════ */}
-      <section className="relative z-20 py-24 md:py-36 px-6 md:px-16 lg:px-24">
+      <section className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
         <div ref={(el) => { fadeRefs.current[5] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-12">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-8 md:mb-12">
             Qanday tartibda <span className="text-[#FF2020]">ishlaymiz</span>
           </h2>
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-8">
             <div className="space-y-6">
               <ProcessStep step={1} title="Audit qilish" />
               <ProcessStep step={2} title="Narx kelishish" />
@@ -391,15 +363,15 @@ export default function Home() {
       </section>
 
       {/* ═══════ 7-QISM — NATIJALAR ═══════ */}
-      <section id="results" className="relative z-20 py-24 md:py-36 px-6 md:px-16 lg:px-24">
+      <section id="results" className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
         <div ref={(el) => { fadeRefs.current[6] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             <span className="text-[#FF2020]">Natijalar</span>
           </h2>
           <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-12 max-w-xl">
             Har bir loyiha bo&apos;yicha qilgan ishlarimiz va erishilgan natijalar.
           </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             <ResultCard
               nisha="Tibbiyot klinikasi"
               vazifa="Ijtimoiy tarmoqlarda bemor oqimini oshirish"
@@ -423,9 +395,9 @@ export default function Home() {
       </section>
 
       {/* ═══════ 8-QISM — XIZMATLAR ═══════ */}
-      <section className="relative z-20 py-24 md:py-36 px-6 md:px-16 lg:px-24">
+      <section className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
         <div ref={(el) => { fadeRefs.current[7] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-12">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-8 md:mb-12">
             <span className="text-[#FF2020]">Xizmatlar</span>
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -440,9 +412,9 @@ export default function Home() {
       </section>
 
       {/* ═══════ 9-QISM — HAMKORLAR CAROUSEL (infinite marquee) ═══════ */}
-      <section className="relative z-20 py-24 md:py-36 overflow-hidden">
-        <div className="px-6 md:px-16 lg:px-24 mb-12">
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
+      <section className="relative z-20 py-16 md:py-36 overflow-hidden">
+        <div className="px-4 md:px-16 lg:px-24 mb-8 md:mb-12">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             <span className="text-[#FF2020]">Hamkorlarimiz</span>
           </h2>
           <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40">
@@ -450,13 +422,13 @@ export default function Home() {
           </p>
         </div>
         <div className="relative w-full overflow-hidden">
-          <div ref={marqueeRef} className="flex items-center gap-12 w-max">
+          <div ref={marqueeRef} className="flex items-center gap-4 md:gap-12 w-max">
             {[...Array(2)].map((_, setIdx) => (
-              <div key={setIdx} className="flex items-center gap-12">
+              <div key={setIdx} className="flex items-center gap-4 md:gap-12">
                 {["BREND A", "BREND B", "BREND C", "BREND D", "BREND E", "BREND F", "BREND G", "BREND H", "BREND I", "BREND J"].map((name, i) => (
                   <div key={`${setIdx}-${i}`}
-                    className="flex-shrink-0 px-8 py-4 border border-[#FF2020]/10 bg-[#0a0a0a] rounded-sm
-                                  font-[family-name:var(--font-heading)] text-sm md:text-base uppercase tracking-[0.15em] text-[#f5f5f5]/30">
+                    className="flex-shrink-0 px-5 md:px-8 py-3 md:py-4 border border-[#FF2020]/10 bg-[#0a0a0a] rounded-sm
+                                  font-[family-name:var(--font-heading)] text-xs md:text-base uppercase tracking-[0.1em] md:tracking-[0.15em] text-[#f5f5f5]/30">
                     {name}
                   </div>
                 ))}
@@ -467,12 +439,12 @@ export default function Home() {
       </section>
 
       {/* ═══════ 10-QISM — FINAL CTA ═══════ */}
-      <section className="relative z-20 py-36 md:py-52 px-6 md:px-16 lg:px-24 text-center">
+      <section className="relative z-20 py-24 md:py-52 px-4 md:px-16 lg:px-24 text-center">
         <div ref={(el) => { fadeRefs.current[8] = el; }}>
           <KineticText lines={["SMM ORQALI", "BIZNESINGIZNI", "O'STIRISHGA", "TAYYORMISIZ?"]} />
-          <div className="mt-12">
-            <a href="#contact" className="group relative inline-block px-12 md:px-16 py-5 md:py-6 bg-[#FF2020] text-[#050505]
-                       font-[family-name:var(--font-heading)] text-lg md:text-xl font-bold uppercase tracking-[0.2em]
+          <div className="mt-8 md:mt-12">
+            <a href="#contact" className="group relative inline-block px-8 md:px-16 py-4 md:py-6 bg-[#FF2020] text-[#050505]
+                       font-[family-name:var(--font-heading)] text-sm md:text-xl font-bold uppercase tracking-[0.15em] md:tracking-[0.2em]
                        hover:bg-[#f5f5f5] transition-colors duration-500 box-glow-strong">
               <span className="relative z-10">Hamkorlik uchun</span>
               <div className="absolute inset-0 bg-[#FF2020] opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
@@ -482,19 +454,19 @@ export default function Home() {
       </section>
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer className="relative z-20 py-12 px-6 md:px-16 lg:px-24 border-t border-[#FF2020]/10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <Image src="/logo.png" alt="Pi MEDIA" width={80} height={50} className="brightness-110" />
-          <div className="flex items-center gap-8">
+      <footer className="relative z-20 py-8 md:py-12 px-4 md:px-16 lg:px-24 border-t border-[#FF2020]/10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+          <Image src="/logo.png" alt="Pi MEDIA" width={60} height={38} className="brightness-110 w-[50px] md:w-[60px]" />
+          <div className="flex items-center gap-4 md:gap-8">
             {["INSTAGRAM", "TELEGRAM", "LINKEDIN"].map((platform) => (
               <a key={platform} href="#"
-                className="font-[family-name:var(--font-body)] text-xs tracking-[0.3em] text-[#f5f5f5]/40
+                className="font-[family-name:var(--font-body)] text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] text-[#f5f5f5]/40
                             hover:text-[#FF2020] transition-colors duration-300">
                 {platform}
               </a>
             ))}
           </div>
-          <div className="font-[family-name:var(--font-body)] text-xs text-[#f5f5f5]/20 tracking-wider">
+          <div className="font-[family-name:var(--font-body)] text-[10px] md:text-xs text-[#f5f5f5]/20 tracking-wider">
             © 2026 BARCHA HUQUQLAR HIMOYALANGAN
           </div>
         </div>

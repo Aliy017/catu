@@ -62,7 +62,7 @@ export default function KineticText({
                     }}
                     className="overflow-hidden"
                 >
-                    <div className="kinetic-inner font-[family-name:var(--font-heading)] text-4xl md:text-7xl lg:text-8xl xl:text-9xl font-bold uppercase leading-[1.05] tracking-tight">
+                    <div className="kinetic-inner font-[family-name:var(--font-heading)] text-2xl sm:text-4xl md:text-6xl lg:text-8xl xl:text-9xl font-bold uppercase leading-[1.1] tracking-tight">
                         {line}
                     </div>
                 </div>
