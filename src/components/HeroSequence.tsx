@@ -137,27 +137,25 @@ export default function HeroSequence() {
 
     return (
         <div ref={containerRef} className="relative" style={{ height: "200vh" }}>
-            {/* Loading Screen */}
-            {!loaded && (
-                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050505]">
-                    <NextImage src="/logo.png" alt="Pi MEDIA" width={120} height={75} className="mb-4 brightness-110 w-[100px] md:w-[120px]" priority />
-                    <div className="mb-6 font-[family-name:var(--font-body)] text-sm text-[#f5f5f5]/40 tracking-[0.3em]">
-                        YUKLANMOQDA...
-                    </div>
-                    <div className="relative h-[2px] w-64 bg-[#1a1a1a] overflow-hidden">
-                        <div
-                            className="absolute left-0 top-0 h-full bg-[#FF2020] transition-all duration-300"
-                            style={{ width: `${progress}%` }}
-                        />
-                    </div>
-                    <div className="mt-4 font-[family-name:var(--font-body)] text-sm text-[#f5f5f5]/50 tracking-widest">
-                        {progress}%
-                    </div>
+            {/* Loading Screen — Fade out when loaded */}
+            <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050505] transition-opacity duration-1000 ${loaded ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
+                <NextImage src="/logo.png" alt="Pi MEDIA" width={300} height={188} className="mb-8 brightness-110 w-[200px] md:w-[300px]" priority />
+                <div className="mb-6 font-[family-name:var(--font-body)] text-sm text-[#f5f5f5]/40 tracking-[0.3em]">
+                    YUKLANMOQDA...
                 </div>
-            )}
+                <div className="relative h-[2px] w-64 bg-[#1a1a1a] overflow-hidden">
+                    <div
+                        className="absolute left-0 top-0 h-full bg-[#FF2020] transition-all duration-300"
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
+                <div className="mt-4 font-[family-name:var(--font-body)] text-sm text-[#f5f5f5]/50 tracking-widest">
+                    {progress}%
+                </div>
+            </div>
 
-            {/* Pinned wrapper — canvas + text overlay pinned together */}
-            <div className="hero-pinned-wrapper w-full h-screen" style={{ display: loaded ? "block" : "none" }}>
+            {/* Pinned wrapper — always visible but behind loader initially */}
+            <div className="hero-pinned-wrapper w-full h-screen">
                 {/* Canvas */}
                 <canvas
                     ref={canvasRef}
