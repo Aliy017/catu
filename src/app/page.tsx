@@ -17,12 +17,12 @@ function Navbar() {
   return (
     <nav className="fixed top-0 left-0 w-full z-40 px-4 md:px-16 py-3 md:py-4 flex items-center justify-between
                     bg-[#050505]/80 backdrop-blur-md border-b border-[#f5f5f5]/5">
-      <Image src="/logo.png" alt="Pi MEDIA" width={60} height={38} className="brightness-110 w-[50px] md:w-[60px]" priority />
       <a
         href="#contact"
-        className="font-[family-name:var(--font-heading)] text-[10px] md:text-sm uppercase tracking-[0.15em] md:tracking-[0.2em] px-4 md:px-6 py-2 md:py-3
-                   border border-[#FF2020]/40 text-[#FF2020] hover:bg-[#FF2020] hover:text-[#050505]
-                   transition-all duration-400"
+        className="font-[family-name:var(--font-heading)] text-xs md:text-base uppercase tracking-[0.2em] px-6 md:px-8 py-3 md:py-4
+                   border border-[#FF2020] bg-[#FF2020]/10 text-[#FF2020]
+                   hover:bg-[#FF2020] hover:text-[#050505] hover:shadow-[0_0_20px_rgba(255,32,32,0.4)]
+                   transition-all duration-400 rounded-sm"
       >
         Bog&apos;lanish
       </a>
@@ -206,12 +206,12 @@ export default function Home() {
       <HeroSequence />
 
       {/* ═══════ 1-QISM — ASOSIY SARLAVHA ═══════ */}
-      <section className="relative z-20 py-20 md:py-44 px-4 md:px-16 lg:px-24">
+      <section className="relative z-20 py-24 md:py-48 px-6 md:px-20 lg:px-32">
         <KineticText
           lines={["NATIJA", "BO'LMAGUNCHA", "XIZMAT", "QILAMIZ."]}
           className="mb-10"
         />
-        <div ref={(el) => { fadeRefs.current[0] = el; }} className="mt-10 max-w-2xl">
+        <div ref={(el) => { fadeRefs.current[0] = el; }} className="mt-12 md:mt-16 max-w-2xl">
           <p className="font-[family-name:var(--font-body)] text-base md:text-lg text-[#f5f5f5]/50 leading-relaxed">
             Bizneslarni ijtimoiy tarmoqlarda sotuvlarini barqaror o&apos;sishiga yordam beramiz.
           </p>
@@ -231,12 +231,12 @@ export default function Home() {
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
-      <section className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
         <div ref={(el) => { fadeRefs.current[1] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             Biz bilan ishlagan <span className="text-[#FF2020]">hamkorlar</span>
           </h2>
-          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-12 max-w-xl">
+          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-10 md:mb-16 max-w-xl">
             Biz turli sohalardagi bizneslar bilan samarali hamkorlik qilganmiz.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4 md:gap-8">
@@ -249,16 +249,16 @@ export default function Home() {
       </section>
 
       {/* ═══════ 3-QISM — BIZ KIMLAR BILAN ISHLAYMIZ ═══════ */}
-      <section className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
         <div ref={(el) => { fadeRefs.current[2] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             Biz kimlar bilan <span className="text-[#FF2020]">ishlaymiz</span>
           </h2>
-          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-12 max-w-xl">
+          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-10 md:mb-14 max-w-xl">
             SMM orqali savdolarini oshirmoqchi bo&apos;lganlar bilan ishlaymiz.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-10">
             {/* ISHLAYMIZ */}
             <div className="p-6 md:p-8 border border-[#FF2020]/20 bg-[#0a0a0a] rounded-sm">
               <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold uppercase text-[#FF2020] mb-6">
@@ -304,12 +304,12 @@ export default function Home() {
       </section>
 
       {/* ═══════ 4-QISM — BIZ ISHLAYDIGAN SOHALAR ═══════ */}
-      <section className="relative z-20 py-24 md:py-36 px-6 md:px-16 lg:px-24">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
         <div ref={(el) => { fadeRefs.current[3] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6">
             Biz ishlaydigan <span className="text-[#FF2020]">sohalar</span>
           </h2>
-          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-12 max-w-xl">
+          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-10 md:mb-14 max-w-xl">
             Har bir soha uchun alohida strategiya va yondashuv ishlab chiqamiz.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -323,7 +323,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 5-QISM — UCHRASHUV BELGILASH ═══════ */}
-      <section id="contact" className="relative z-20 py-20 md:py-40 px-4 md:px-16 lg:px-24">
+      <section id="contact" className="relative z-20 py-24 md:py-44 px-6 md:px-20 lg:px-32">
         <div ref={(el) => { fadeRefs.current[4] = el; }} className="max-w-3xl mx-auto text-center">
           <KineticText
             lines={["HAMKORLIK UCHUN", "UCHRASHUV", "BELGILAYMIZMI?"]}
@@ -331,16 +331,16 @@ export default function Home() {
           <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mt-6 md:mt-8 mb-8 md:mb-10">
             Qisqa registratsiya qoldiring — biznesingizni tahlil qilib, aniq reja beramiz.
           </p>
-          <a href="#contact-form" className="inline-block px-8 md:px-16 py-4 md:py-6 bg-[#FF2020] text-[#050505]
-                     font-[family-name:var(--font-heading)] text-sm md:text-lg font-bold uppercase tracking-[0.15em] md:tracking-[0.2em]
+          <a href="#contact-form" className="inline-block px-10 md:px-20 py-5 md:py-8 bg-[#FF2020] text-[#050505]
+                     font-[family-name:var(--font-heading)] text-lg md:text-2xl font-bold uppercase tracking-[0.15em] md:tracking-[0.2em]
                      hover:bg-[#f5f5f5] transition-colors duration-500 box-glow-strong">
-            Registratsiya qilish
+            Ro&apos;yxatdan o&apos;tish
           </a>
         </div>
       </section>
 
       {/* ═══════ 6-QISM — QANDAY TARTIBDA ISHLAYMIZ ═══════ */}
-      <section className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
         <div ref={(el) => { fadeRefs.current[5] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-8 md:mb-12">
             Qanday tartibda <span className="text-[#FF2020]">ishlaymiz</span>
@@ -363,12 +363,12 @@ export default function Home() {
       </section>
 
       {/* ═══════ 7-QISM — NATIJALAR ═══════ */}
-      <section id="results" className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
+      <section id="results" className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
         <div ref={(el) => { fadeRefs.current[6] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             <span className="text-[#FF2020]">Natijalar</span>
           </h2>
-          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-12 max-w-xl">
+          <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/40 mb-10 md:mb-14 max-w-xl">
             Har bir loyiha bo&apos;yicha qilgan ishlarimiz va erishilgan natijalar.
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -395,7 +395,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 8-QISM — XIZMATLAR ═══════ */}
-      <section className="relative z-20 py-16 md:py-36 px-4 md:px-16 lg:px-24">
+      <section className="relative z-20 py-20 md:py-40 px-6 md:px-20 lg:px-32">
         <div ref={(el) => { fadeRefs.current[7] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-8 md:mb-12">
             <span className="text-[#FF2020]">Xizmatlar</span>
@@ -412,8 +412,8 @@ export default function Home() {
       </section>
 
       {/* ═══════ 9-QISM — HAMKORLAR CAROUSEL (infinite marquee) ═══════ */}
-      <section className="relative z-20 py-16 md:py-36 overflow-hidden">
-        <div className="px-4 md:px-16 lg:px-24 mb-8 md:mb-12">
+      <section className="relative z-20 py-20 md:py-40 overflow-hidden">
+        <div className="px-6 md:px-20 lg:px-32 mb-8 md:mb-12">
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase text-[#f5f5f5] mb-4">
             <span className="text-[#FF2020]">Hamkorlarimiz</span>
           </h2>
@@ -439,7 +439,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 10-QISM — FINAL CTA ═══════ */}
-      <section className="relative z-20 py-24 md:py-52 px-4 md:px-16 lg:px-24 text-center">
+      <section className="relative z-20 py-28 md:py-56 px-6 md:px-20 lg:px-32 text-center">
         <div ref={(el) => { fadeRefs.current[8] = el; }}>
           <KineticText lines={["SMM ORQALI", "BIZNESINGIZNI", "O'STIRISHGA", "TAYYORMISIZ?"]} />
           <div className="mt-8 md:mt-12">
@@ -454,7 +454,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer className="relative z-20 py-8 md:py-12 px-4 md:px-16 lg:px-24 border-t border-[#FF2020]/10">
+      <footer className="relative z-20 py-8 md:py-12 px-6 md:px-20 lg:px-32 border-t border-[#FF2020]/10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
           <Image src="/logo.png" alt="Pi MEDIA" width={60} height={38} className="brightness-110 w-[50px] md:w-[60px]" />
           <div className="flex items-center gap-4 md:gap-8">

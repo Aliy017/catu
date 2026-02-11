@@ -22,31 +22,28 @@ export default function KineticText({
         if (!containerRef.current) return;
 
         const ctx = gsap.context(() => {
-            lineRefs.current.forEach((lineEl) => {
-                if (!lineEl) return;
-                const inner = lineEl.querySelector(".kinetic-inner");
-                if (!inner) return;
+            const inners = lineRefs.current.map(el => el?.querySelector(".kinetic-inner")).filter(Boolean);
 
-                gsap.fromTo(
-                    inner,
-                    {
-                        yPercent: 100,
-                        opacity: 0,
+            gsap.fromTo(
+                inners,
+                {
+                    yPercent: 100,
+                    opacity: 0,
+                },
+                {
+                    yPercent: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    ease: "power4.out",
+                    stagger: 0.1, // Stagger effect
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top 85%",
+                        end: "bottom 50%", // More reasonable range
+                        toggleActions: "play none none reverse", // Play once, reverse if scrolled back up
                     },
-                    {
-                        yPercent: 0,
-                        opacity: 1,
-                        duration: 1.2,
-                        ease: "power4.out",
-                        scrollTrigger: {
-                            trigger: lineEl,
-                            start: "top 85%",
-                            end: "top 50%",
-                            scrub: 1,
-                        },
-                    }
-                );
-            });
+                }
+            );
         }, containerRef);
 
         return () => ctx.revert();
