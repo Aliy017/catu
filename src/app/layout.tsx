@@ -26,6 +26,11 @@ export const metadata: Metadata = {
   description:
     "Men trendlarga ergashmayman. Men ularni yarataman. Eng yuqori darajadagi SMM mutaxassisi — aggressiv o'sish va premium brend identifikatsiyasi.",
   keywords: ["SMM", "ijtimoiy tarmoq", "marketing", "brend", "Pi MEDIA", "reklama"],
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
