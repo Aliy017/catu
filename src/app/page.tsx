@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeroSequence from "@/components/HeroSequence";
 import ParticleOverlay from "@/components/ParticleOverlay";
 import KineticText from "@/components/KineticText";
+import HowWeWork from "@/components/HowWeWork";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -80,35 +81,8 @@ function ServiceCard({ number, title }: { number: string; title: string }) {
 }
 
 /* ══════════════════════════════════════════════════════
-   PROCESS STEP
+   PROCESS STEP (Old component removed in v3.2)
    ══════════════════════════════════════════════════════ */
-function ProcessStep({ step, title }: { step: number; title: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!ref.current) return;
-    const ctx = gsap.context(() => {
-      gsap.fromTo(ref.current, { yPercent: 20, opacity: 0 }, {
-        yPercent: 0, opacity: 1, ease: "power3.out",
-        scrollTrigger: { trigger: ref.current, start: "top 85%", toggleActions: "play none none none" },
-      });
-    });
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <div ref={ref} className="flex items-center gap-5 group">
-      <div className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full border border-[#FF2020]/30 bg-[#050505]
-                      flex items-center justify-center group-hover:bg-[#FF2020] group-hover:border-[#FF2020] transition-all duration-500">
-        <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-[#FF2020] group-hover:text-[#050505] transition-colors duration-500">
-          {step}
-        </span>
-      </div>
-      <span className="font-[family-name:var(--font-heading)] text-lg md:text-xl uppercase text-[#f5f5f5]/80 group-hover:text-[#f5f5f5] transition-colors duration-300">
-        {title}
-      </span>
-    </div>
-  );
-}
 
 /* ══════════════════════════════════════════════════════
    SECTOR CARD
@@ -402,23 +376,8 @@ export default function Home() {
       </section>
 
       {/* ═══════ 6-QISM — QANDAY TARTIBDA ISHLAYMIZ ═══════ */}
-      <section className="relative z-20 py-40 md:py-72 px-6 md:px-12 max-w-[1400px] mx-auto">
-        <div ref={(el) => { fadeRefs.current[5] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-12 md:mb-20">
-            Qanday tartibda <span className="text-[#FF2020]">ishlaymiz</span>
-          </h2>
-          <div className="flex flex-col gap-12 md:gap-16 max-w-4xl mx-auto">
-            <ProcessStep step={1} title="Audit qilish" />
-            <ProcessStep step={2} title="Narx kelishish" />
-            <ProcessStep step={3} title="Shartnoma tuzish" />
-            <ProcessStep step={4} title="Strategiya tuzib chiqish" />
-            <ProcessStep step={5} title="Proektni ishga tushurish" />
-            <ProcessStep step={6} title="Haftalik hisobotlar" />
-            <ProcessStep step={7} title="Oylik hisobotlar" />
-          </div>
-        </div>
-        <div className="mt-28 h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
-      </section>
+      {/* ═══════ 6-QISM — QANDAY TARTIBDA ISHLAYMIZ (NEW 3D PARALLAX) ═══════ */}
+      <HowWeWork />
 
       {/* ═══════ 7-QISM — NATIJALAR ═══════ */}
       <section id="results" className="relative z-20 py-40 md:py-72 px-6 md:px-12 max-w-[1400px] mx-auto">
