@@ -15,10 +15,10 @@ const STEPS = [
     { text: "Audit qilish", x: "6%", y: "10%" },
     { text: "Narx kelishish", x: "60%", y: "8%" },
     { text: "Shartnoma tuzish", x: "4%", y: "32%" },
-    { text: "Strategiya tuzib chiqish", x: "65%", y: "72%" },
-    { text: "Proektni ishga tushurish", x: "6%", y: "74%" },
-    { text: "Haftalik hisobotlar", x: "74%", y: "86%" },
-    { text: "Oylik hisobotlar", x: "10%", y: "90%" },
+    { text: "Strategiya tuzib chiqish", x: "55%", y: "62%" },
+    { text: "Proektni ishga tushurish", x: "6%", y: "66%" },
+    { text: "Haftalik hisobotlar", x: "58%", y: "80%" },
+    { text: "Oylik hisobotlar", x: "10%", y: "88%" },
 ];
 
 export default function HowWeWork() {
@@ -34,26 +34,26 @@ export default function HowWeWork() {
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: "top top",
-                    end: "+=180%",          // shorter, snappier scroll
+                    end: "+=100%",          // fast, snappy scroll
                     pin: true,
                     scrub: 1.2,             // smooth inertia feel
                     anticipatePin: 1,
                 },
             });
 
-            // Each step drifts in from the right, staggered
+            // Each step drifts in from the LEFT, staggered
             stepsRef.current.forEach((el, i) => {
                 if (!el) return;
                 tl.fromTo(
                     el,
-                    { xPercent: 200, opacity: 0 },
+                    { xPercent: -200, opacity: 0 },
                     {
                         xPercent: 0,
                         opacity: 1,
                         duration: 1,
                         ease: "power3.out",
                     },
-                    i * 0.4 // stagger offset
+                    i * 0.3 // tighter stagger for shorter scroll
                 );
             });
 
@@ -80,7 +80,8 @@ export default function HowWeWork() {
                      text-3xl sm:text-5xl md:text-7xl lg:text-[100px] xl:text-[120px]
                      leading-[0.85] font-bold uppercase text-[#f5f5f5]"
                 >
-                    <span className="block mb-2 md:mb-6">Qanday tartibda</span>
+                    Qanday tartibda
+                    <br />
                     <span className="text-[#FF2020]">ishlaymiz</span>
                 </h2>
             </div>
