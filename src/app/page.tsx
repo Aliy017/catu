@@ -197,6 +197,60 @@ export default function Home() {
     return () => ctx.revert();
   }, []);
 
+  /* Green Particle Burst on Click */
+  const createParticleBurst = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.style.position = 'fixed';
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+      particle.style.width = '8px';
+      particle.style.height = '8px';
+      particle.style.borderRadius = '50%';
+      particle.style.backgroundColor = '#00FF00';
+      particle.style.pointerEvents = 'none';
+      particle.style.zIndex = '9999';
+      particle.style.boxShadow = '0 0 10px #00FF00';
+
+      const angle = (Math.PI * 2 * i) / 20;
+      const velocity = 100 + Math.random() * 100;
+      const vx = Math.cos(angle) * velocity;
+      const vy = Math.sin(angle) * velocity;
+
+      document.body.appendChild(particle);
+
+      let posX = x;
+      let posY = y;
+      let opacity = 1;
+      const startTime = Date.now();
+
+      const animate = () => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        if (elapsed > 1) {
+          particle.remove();
+          return;
+        }
+
+        posX += vx * 0.016;
+        posY += vy * 0.016 - 50 * elapsed;
+        opacity = 1 - elapsed;
+
+        particle.style.left = `${posX}px`;
+        particle.style.top = `${posY}px`;
+        particle.style.opacity = `${opacity}`;
+
+        requestAnimationFrame(animate);
+      };
+
+      requestAnimationFrame(animate);
+    }
+  };
+
+
   return (
     <main className="relative min-h-screen bg-[#050505]">
       <ParticleOverlay />
@@ -211,19 +265,27 @@ export default function Home() {
           lines={["NATIJA", "BO'LMAGUNCHA", "XIZMAT", "QILAMIZ."]}
           className="mb-10"
         />
-        <div ref={(el) => { fadeRefs.current[0] = el; }} className="mt-12 md:mt-16 max-w-2xl">
-          <p className="font-[family-name:var(--font-body)] text-base md:text-lg text-[#f5f5f5]/50 leading-relaxed">
+        <div ref={(el) => { fadeRefs.current[0] = el; }} className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
+          <p className="font-[family-name:var(--font-body)] text-xl md:text-3xl lg:text-4xl text-[#f5f5f5] font-semibold leading-relaxed mb-12">
             Bizneslarni ijtimoiy tarmoqlarda sotuvlarini barqaror o&apos;sishiga yordam beramiz.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <a href="#contact" className="inline-block text-center px-6 md:px-8 py-3 md:py-4 bg-[#FF2020] text-[#050505]
-                       font-[family-name:var(--font-heading)] text-xs md:text-sm font-bold uppercase tracking-[0.15em]
-                       hover:bg-[#f5f5f5] transition-colors duration-500 box-glow">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <a
+              href="#contact"
+              onClick={(e) => createParticleBurst(e)}
+              className="inline-block text-center px-10 md:px-16 py-5 md:py-7 bg-[#FF2020] text-[#050505]
+                         font-[family-name:var(--font-heading)] text-base md:text-xl font-bold uppercase tracking-[0.15em]
+                         hover:bg-[#00FF00] hover:shadow-[0_0_30px_rgba(0,255,0,0.6)] transition-all duration-300 box-glow"
+            >
               Audit tekshiruvi olish
             </a>
-            <a href="#results" className="inline-block text-center px-6 md:px-8 py-3 md:py-4 border border-[#FF2020]/40 text-[#FF2020]
-                       font-[family-name:var(--font-heading)] text-xs md:text-sm font-bold uppercase tracking-[0.15em]
-                       hover:bg-[#FF2020] hover:text-[#050505] transition-all duration-500">
+            <a
+              href="#results"
+              onClick={(e) => createParticleBurst(e)}
+              className="inline-block text-center px-10 md:px-16 py-5 md:py-7 border-2 border-[#FF2020] text-[#FF2020]
+                         font-[family-name:var(--font-heading)] text-base md:text-xl font-bold uppercase tracking-[0.15em]
+                         hover:bg-[#00FF00] hover:border-[#00FF00] hover:text-[#050505] hover:shadow-[0_0_30px_rgba(0,255,0,0.6)] transition-all duration-300"
+            >
               Natijalar
             </a>
           </div>

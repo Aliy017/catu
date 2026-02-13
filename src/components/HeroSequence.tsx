@@ -100,7 +100,9 @@ export default function HeroSequence() {
     useEffect(() => {
         if (!loaded || !containerRef.current || !canvasRef.current || !overlayRef.current) return;
 
-        drawFrame(0);
+        // Force draw immediately and slightly delayed to ensure visibility
+        requestAnimationFrame(() => drawFrame(0));
+        const timer = setTimeout(() => drawFrame(0), 100);
 
         /* Pin the canvas AND the overlay together inside the container */
         const tween = gsap.to(frameIndexRef.current, {
