@@ -15,10 +15,10 @@ const STEPS = [
     { text: "Audit qilish", x: "6%", y: "10%" },
     { text: "Narx kelishish", x: "60%", y: "8%" },
     { text: "Shartnoma tuzish", x: "4%", y: "32%" },
-    { text: "Strategiya tuzib chiqish", x: "55%", y: "62%" },
-    { text: "Proektni ishga tushurish", x: "6%", y: "66%" },
-    { text: "Haftalik hisobotlar", x: "58%", y: "80%" },
-    { text: "Oylik hisobotlar", x: "10%", y: "88%" },
+    { text: "Strategiya tuzib chiqish", x: "65%", y: "72%" },
+    { text: "Proektni ishga tushurish", x: "6%", y: "74%" },
+    { text: "Haftalik hisobotlar", x: "74%", y: "86%" },
+    { text: "Oylik hisobotlar", x: "10%", y: "90%" },
 ];
 
 export default function HowWeWork() {
@@ -80,8 +80,7 @@ export default function HowWeWork() {
                      text-3xl sm:text-5xl md:text-7xl lg:text-[100px] xl:text-[120px]
                      leading-[0.85] font-bold uppercase text-[#f5f5f5]"
                 >
-                    Qanday tartibda
-                    <br />
+                    <span className="block mb-2 md:mb-6">Qanday tartibda</span>
                     <span className="text-[#FF2020]">ishlaymiz</span>
                 </h2>
             </div>
