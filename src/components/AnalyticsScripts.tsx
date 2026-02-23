@@ -27,7 +27,8 @@ export default function AnalyticsScripts() {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const w = window as any;
                     if (!w.fbq) {
-                        const n = (w.fbq = function (...args: unknown[]) {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const n: any = (w.fbq = function (...args: unknown[]) {
                             n.callMethod ? n.callMethod.apply(n, args) : n.queue.push(args);
                         });
                         if (!w._fbq) w._fbq = n;
