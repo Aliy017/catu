@@ -1,146 +1,121 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeroSequence from "@/components/HeroSequence";
 import ParticleOverlay from "@/components/ParticleOverlay";
 import KineticText from "@/components/KineticText";
-import HowWeWork from "@/components/HowWeWork";
+import RichTypewriter from "@/components/RichTypewriter";
+import BubbleButton from "@/components/BubbleButton";
+import ScrollArrow from "@/components/ScrollArrow";
+
+// ⚡ Dynamic imports — below-fold heavy components (lazy load for speed)
+const HowWeWork = dynamic(() => import("@/components/HowWeWork"), { ssr: false });
+const InteractiveServiceList = dynamic(() => import("@/components/InteractiveServiceList"), { ssr: false });
+const SpotlightResults = dynamic(() => import("@/components/SpotlightResults"), { ssr: false });
+const SectorCinematic = dynamic(() => import("@/components/SectorCinematic"), { ssr: false });
+const WhoWeWorkWith = dynamic(() => import("@/components/WhoWeWorkWith"), { ssr: false });
+const ContactModal = dynamic(() => import("@/components/ContactModal"), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger);
 
 /* ══════════════════════════════════════════════════════
-   NAVBAR
+   NAVBAR — appears after hero, sticks to top
    ══════════════════════════════════════════════════════ */
-function Navbar() {
+function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show navbar after scrolling past hero (roughly 100vh)
+      setVisible(window.scrollY > window.innerHeight * 0.8);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { label: "Hamkorlar", href: "#partners" },
+    { label: "Natijalar", href: "#results" },
+    { label: "Ro'yxatdan o'tish", href: "#contact" },
+  ];
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-40 px-6 md:px-12 py-3 md:py-4 flex items-center justify-end
-                    bg-[#050505]/80 backdrop-blur-md border-b border-[#f5f5f5]/5">
-      <a
-        href="#contact"
-        className="font-[family-name:var(--font-heading)] text-xs md:text-base uppercase tracking-[0.2em] px-6 md:px-8 py-3 md:py-4
-                   border border-[#FF2020] bg-[#FF2020]/10 text-[#FF2020]
-                   hover:bg-[#FF2020] hover:text-[#050505] hover:shadow-[0_0_20px_rgba(255,32,32,0.4)]
-                   transition-all duration-400 rounded-sm"
-      >
-        Bog&apos;lanish
-      </a>
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${visible
+        ? "translate-y-0 opacity-100"
+        : "-translate-y-full opacity-0"
+        }`}
+    >
+      <div className="bg-[#050505]/85 backdrop-blur-md border-b border-[#f5f5f5]/5">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-3 md:py-4 flex items-center justify-between">
+          {/* Logo */}
+          <a href="#" className="flex-shrink-0">
+            <Image
+              src="/logo.png"
+              alt="Pi MEDIA"
+              width={150}
+              height={95}
+              className="brightness-110 w-[80px] md:w-[120px]"
+            />
+          </a>
+
+          {/* Nav links */}
+          <div className="flex items-center gap-3 md:gap-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={link.href === "#contact" ? (e: React.MouseEvent) => { e.preventDefault(); onOpenContact(); } : undefined}
+                className="nav-link-shimmer font-[family-name:var(--font-body)] text-[10px] md:text-sm font-medium uppercase tracking-wider
+                           hover:text-[#FF2020] transition-all duration-300 cursor-pointer"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
     </nav>
   );
 }
 
-/* (Counter hook removed — not used in v2) */
+
 
 /* ══════════════════════════════════════════════════════
    PARTNER LOGO (placeholder circle)
    ══════════════════════════════════════════════════════ */
-function PartnerCircle({ name }: { name: string }) {
-  return (
-    <div className="flex flex-col items-center gap-3 group">
-      <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border border-[#FF2020]/20 bg-[#0a0a0a]
-                      flex items-center justify-center group-hover:border-[#FF2020]/60
-                      group-hover:shadow-[0_0_20px_rgba(255,32,32,0.15)] transition-all duration-500">
-        <span className="font-[family-name:var(--font-heading)] text-sm md:text-base font-bold text-[#f5f5f5]/40 group-hover:text-[#FF2020] transition-colors duration-500">
-          {name}
-        </span>
-      </div>
-    </div>
-  );
-}
+const partnerLogos = [
+  { src: "/partners/01.webp", alt: "Franklin", bg: "bg-white", cover: true },
+  { src: "/partners/02.webp", alt: "Rivoj-98", bg: "bg-white" },
+  { src: "/partners/03.webp", alt: "Beshbola Game Club", bg: "bg-white", cover: true },
+  { src: "/partners/04.webp", alt: "MIG Build", bg: "bg-white" },
+  { src: "/partners/05.webp", alt: "Texno sifat", bg: "bg-black", cover: true },
+  { src: "/partners/06.webp", alt: "Ferton.uz", bg: "bg-[#111]" },
+  { src: "/partners/07.webp", alt: "Le Crayon", bg: "bg-white", scale: "scale-150" },
+  { src: "/partners/08.webp", alt: "Humo Med Servis", bg: "bg-white" },
+];
 
-/* ══════════════════════════════════════════════════════
-   SERVICE CARD
-   ══════════════════════════════════════════════════════ */
-function ServiceCard({ number, title }: { number: string; title: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!ref.current) return;
-    const ctx = gsap.context(() => {
-      gsap.fromTo(ref.current, { yPercent: 30, opacity: 0 }, {
-        yPercent: 0, opacity: 1, ease: "power3.out",
-        scrollTrigger: { trigger: ref.current, start: "top 85%", end: "top 55%", scrub: 1 },
-      });
-    });
-    return () => ctx.revert();
-  }, []);
 
-  return (
-    <div ref={ref} className="group relative p-8 md:p-10 border border-[#FF2020]/15 bg-gradient-to-br from-[#0a0a0a] to-[#0f0f0f]
-                               hover:border-[#FF2020]/50 transition-all duration-500 rounded-sm">
-      <div className="absolute top-4 right-4 font-[family-name:var(--font-heading)] text-5xl font-bold text-[#FF2020]/8 group-hover:text-[#FF2020]/15 transition-colors duration-500">
-        {number}
-      </div>
-      <h3 className="font-[family-name:var(--font-heading)] text-xl md:text-2xl font-bold uppercase text-[#f5f5f5] relative z-10">
-        {title}
-      </h3>
-      <div className="mt-4 h-[1px] w-0 bg-[#FF2020] group-hover:w-full transition-all duration-700" />
-    </div>
-  );
-}
 
-/* ══════════════════════════════════════════════════════
-   PROCESS STEP (Old component removed in v3.2)
-   ══════════════════════════════════════════════════════ */
 
-/* ══════════════════════════════════════════════════════
-   SECTOR CARD
-   ══════════════════════════════════════════════════════ */
-function SectorCard({ title }: { title: string }) {
-  return (
-    <div className="group p-8 md:p-10 border border-[#FF2020]/15 bg-[#0a0a0a]
-                    hover:border-[#FF2020]/50 hover:bg-[#0f0f0f] transition-all duration-500 rounded-sm text-center">
-      <h3 className="font-[family-name:var(--font-heading)] text-xl md:text-2xl font-bold uppercase text-[#f5f5f5]">
-        {title}
-      </h3>
-      <div className="mt-4 mx-auto h-[1px] w-0 bg-[#FF2020] group-hover:w-16 transition-all duration-700" />
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════
-   RESULT CARD
-   ══════════════════════════════════════════════════════ */
-function ResultCard({ nisha, vazifa, ishlar, kpi }: { nisha: string; vazifa: string; ishlar: string; kpi: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!ref.current) return;
-    const ctx = gsap.context(() => {
-      gsap.fromTo(ref.current, { yPercent: 30, opacity: 0, scale: 0.97 }, {
-        yPercent: 0, opacity: 1, scale: 1, ease: "power3.out",
-        scrollTrigger: { trigger: ref.current, start: "top 85%", end: "top 55%", scrub: 1 },
-      });
-    });
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <div ref={ref} className="p-6 md:p-8 border border-[#FF2020]/15 bg-gradient-to-br from-[#0a0a0a] to-[#0f0f0f] rounded-sm
-                               hover:border-[#FF2020]/40 transition-all duration-500">
-      <div className="space-y-3">
-        {[
-          { label: "Nisha", value: nisha },
-          { label: "Vazifa", value: vazifa },
-          { label: "Qilingan ishlar", value: ishlar },
-          { label: "KPI natija", value: kpi },
-        ].map((item) => (
-          <div key={item.label}>
-            <span className="font-[family-name:var(--font-body)] text-xs tracking-[0.2em] text-[#FF2020]/60 uppercase">{item.label}</span>
-            <p className="font-[family-name:var(--font-body)] text-sm md:text-base text-[#f5f5f5]/70 mt-1">{item.value}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /* ══════════════════════════════════════════════════════
    MAIN PAGE
    ══════════════════════════════════════════════════════ */
 export default function Home() {
+  /* Contact modal state */
+  const [contactOpen, setContactOpen] = useState(false);
+  const openContact = useCallback(() => setContactOpen(true), []);
+  const closeContact = useCallback(() => setContactOpen(false), []);
+
   /* Fade-in refs */
   const fadeRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const partnerGridRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const ctx = gsap.context(() => {
       fadeRefs.current.forEach((el) => {
@@ -154,298 +129,241 @@ export default function Home() {
     return () => ctx.revert();
   }, []);
 
-  /* Marquee for section 9 */
-  const marqueeRef = useRef<HTMLDivElement>(null);
+  /* Partner logo stagger animation */
   useEffect(() => {
-    if (!marqueeRef.current) return;
+    if (!partnerGridRef.current) return;
     const ctx = gsap.context(() => {
-      const marquee = marqueeRef.current;
-      if (!marquee) return;
-      gsap.to(marquee, {
-        xPercent: -50,
-        ease: "none",
-        duration: 25,
-        repeat: -1,
-      });
+      const items = partnerGridRef.current!.children;
+      gsap.fromTo(items,
+        { y: 60, scale: 0.5, opacity: 0 },
+        {
+          y: 0, scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.4)",
+          stagger: 0.1,
+          scrollTrigger: { trigger: partnerGridRef.current, start: "top 85%", toggleActions: "play none none none" },
+        }
+      );
     });
     return () => ctx.revert();
   }, []);
 
-  /* Green Particle Burst on Click */
-  const createParticleBurst = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
 
-    for (let i = 0; i < 20; i++) {
-      const particle = document.createElement('div');
-      particle.style.position = 'fixed';
-      particle.style.left = `${x}px`;
-      particle.style.top = `${y}px`;
-      particle.style.width = '8px';
-      particle.style.height = '8px';
-      particle.style.borderRadius = '50%';
-      particle.style.backgroundColor = '#00FF00';
-      particle.style.pointerEvents = 'none';
-      particle.style.zIndex = '9999';
-      particle.style.boxShadow = '0 0 10px #00FF00';
 
-      const angle = (Math.PI * 2 * i) / 20;
-      const velocity = 100 + Math.random() * 100;
-      const vx = Math.cos(angle) * velocity;
-      const vy = Math.sin(angle) * velocity;
-
-      document.body.appendChild(particle);
-
-      let posX = x;
-      let posY = y;
-      let opacity = 1;
-      const startTime = Date.now();
-
-      const animate = () => {
-        const elapsed = (Date.now() - startTime) / 1000;
-        if (elapsed > 1) {
-          particle.remove();
-          return;
-        }
-
-        posX += vx * 0.016;
-        posY += vy * 0.016 - 50 * elapsed;
-        opacity = 1 - elapsed;
-
-        particle.style.left = `${posX}px`;
-        particle.style.top = `${posY}px`;
-        particle.style.opacity = `${opacity}`;
-
-        requestAnimationFrame(animate);
-      };
-
-      requestAnimationFrame(animate);
-    }
-  };
 
 
   return (
     <main className="relative min-h-screen bg-[#050505]">
       <ParticleOverlay />
-      <Navbar />
+      <Navbar onOpenContact={openContact} />
 
       {/* ═══════ HERO — CANVAS IMAGE SEQUENCE ═══════ */}
       <HeroSequence />
+      <ScrollArrow />
 
       {/* ═══════ 1-QISM — ASOSIY SARLAVHA ═══════ */}
-      <section className="relative z-20 py-40 md:py-80 px-6 md:px-12 max-w-[1400px] mx-auto">
+      <section className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
         <KineticText
           lines={["NATIJA", "BO'LMAGUNCHA", "XIZMAT", "QILAMIZ."]}
           className="mb-10"
         />
-        <div ref={(el) => { fadeRefs.current[0] = el; }} className="mt-12 md:mt-16 max-w-4xl mx-auto text-center">
-          <p className="font-[family-name:var(--font-body)] text-xl md:text-3xl lg:text-4xl text-[#f5f5f5] font-semibold leading-relaxed mb-12">
-            Bizneslarni ijtimoiy tarmoqlarda sotuvlarini barqaror o&apos;sishiga yordam beramiz.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <a
-              href="#contact"
-              onClick={(e) => createParticleBurst(e)}
-              className="inline-block text-center px-10 md:px-16 py-5 md:py-7 bg-[#FF2020] text-[#050505]
-                         font-[family-name:var(--font-heading)] text-base md:text-xl font-bold uppercase tracking-[0.15em]
-                         hover:bg-[#00FF00] hover:shadow-[0_0_30px_rgba(0,255,0,0.6)] transition-all duration-300 box-glow"
-            >
-              Audit tekshiruvi olish
-            </a>
-            <a
-              href="#results"
-              onClick={(e) => createParticleBurst(e)}
-              className="inline-block text-center px-10 md:px-16 py-5 md:py-7 border-2 border-[#FF2020] text-[#FF2020]
-                         font-[family-name:var(--font-heading)] text-base md:text-xl font-bold uppercase tracking-[0.15em]
-                         hover:bg-[#00FF00] hover:border-[#00FF00] hover:text-[#050505] hover:shadow-[0_0_30px_rgba(0,255,0,0.6)] transition-all duration-300"
-            >
-              Natijalar
-            </a>
+        <div className="h-[10vh] md:h-[15vh]" />
+        <div className="mt-12 md:mt-16 max-w-4xl md:max-w-none mx-auto md:mx-0">
+          {/* Premium subtitle block */}
+          <div className="relative text-center">
+            <div className="min-h-[80px] md:min-h-[100px]">
+              <RichTypewriter
+                segments={[
+                  { text: "Bizneslarni", className: "text-[#f5f5f5] font-semibold" },
+                  { text: " ijtimoiy tarmoqlarda ", className: "" },
+                  { text: "sotuvlarini barqaror o'sishiga", className: "subtitle-gradient font-semibold" },
+                  { text: " yordam beramiz.", className: "" },
+                ]}
+                speed={2}
+                className="font-[family-name:var(--font-body)] text-lg md:text-2xl lg:text-3xl text-[#f5f5f5]/60 font-light leading-[1.6] md:leading-[1.9] tracking-wide"
+              />
+            </div>
+            <div className="h-[40vh] md:h-[60vh]" />
+            <div className="flex justify-center">
+              <BubbleButton onOpen={openContact} />
+            </div>
+            <div className="h-[40vh] md:h-[60vh]" />
           </div>
         </div>
+        <div className="hidden md:block md:h-[20vh]" />
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
-      <section className="relative z-20 py-40 md:py-72 px-6 md:px-12 max-w-[1400px] mx-auto">
+      <section id="partners" style={{ scrollMarginTop: 100 }} className="relative z-20 mt-[20vh] md:mt-[40vh] pt-[60vh] pb-[30vh] md:pt-[80vh] md:pb-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[1] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-6 md:mb-8">
+          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6 text-center">
             Biz bilan ishlagan <span className="text-[#FF2020]">hamkorlar</span>
           </h2>
-          <p className="font-[family-name:var(--font-body)] text-base md:text-xl text-[#f5f5f5]/50 mb-16 md:mb-24 max-w-2xl leading-relaxed">
-            Biz turli sohalardagi bizneslar bilan samarali hamkorlik qilganmiz.
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-6 md:gap-10">
-            {["01", "02", "03", "04", "05", "06", "07", "08"].map((n) => (
-              <PartnerCircle key={n} name={n} />
+          <div className="flex justify-center w-full mb-16 md:mb-24">
+            <p className="font-[family-name:var(--font-body)] text-lg md:text-2xl max-w-3xl leading-relaxed text-center text-sweep-red">
+              Biz turli sohalardagi bizneslar bilan <span className="font-semibold">samarali hamkorlik</span> qilganmiz.
+            </p>
+          </div>
+          <div className="h-[10vh]" />
+          <div ref={partnerGridRef} className="grid grid-cols-2 sm:grid-cols-4 gap-x-5 gap-y-10 md:gap-x-6 md:gap-y-12">
+            {partnerLogos.map((logo, i) => (
+              <div key={i} className="flex flex-col items-center group">
+                {/* Red blur glow behind logo */}
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full bg-[#FF2020]/25 blur-[20px] scale-105
+                                  group-hover:bg-[#FF2020]/50 group-hover:blur-[30px] group-hover:scale-115
+                                  transition-all duration-700 ease-out" />
+                  <div
+                    className={`relative w-20 h-20 md:w-28 md:h-28 rounded-full border border-[#FF2020]/40 ${logo.bg}
+                                overflow-hidden
+                                group-hover:border-[#FF2020]/70
+                                shadow-[0_0_15px_rgba(255,32,32,0.25)]
+                                group-hover:shadow-[0_0_40px_rgba(255,32,32,0.4)] transition-all duration-500`}
+                    style={{ clipPath: 'circle(50%)' }}
+                  >
+                    <div className={`absolute ${logo.cover ? 'inset-0' : 'inset-2 md:inset-3'}`}>
+                      <Image
+                        src={logo.src}
+                        alt={logo.alt}
+                        fill
+                        sizes="(max-width: 768px) 80px, 112px"
+                        className={`${logo.cover ? 'object-cover' : 'object-contain'} ${logo.scale || ''}`}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <span style={{ marginTop: 12 }} className="font-[family-name:var(--font-heading)] text-[10px] md:text-sm font-semibold uppercase tracking-wider text-[#f5f5f5]/60
+                                  text-center whitespace-normal leading-tight max-w-[90px] md:max-w-[120px]">
+                  {logo.alt}
+                </span>
+                <div className="mt-1.5 h-[2px] w-14 md:w-24 bg-gradient-to-r from-transparent via-[#FF2020]/60 to-transparent rounded-full" />
+              </div>
             ))}
           </div>
         </div>
-        <div className="mt-28 h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
-      </section>
-
-      {/* ═══════ 3-QISM — BIZ KIMLAR BILAN ISHLAYMIZ ═══════ */}
-      <section className="relative z-20 py-40 md:py-72 px-6 md:px-12 max-w-[1400px] mx-auto">
-        <div ref={(el) => { fadeRefs.current[2] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-6 md:mb-8">
-            Biz kimlar bilan <span className="text-[#FF2020]">ishlaymiz</span>
-          </h2>
-          <p className="font-[family-name:var(--font-body)] text-base md:text-xl text-[#f5f5f5]/50 mb-16 md:mb-24 max-w-2xl leading-relaxed">
-            SMM orqali savdolarini oshirmoqchi bo&apos;lganlar bilan ishlaymiz.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-12 md:gap-24">
-            {/* ISHLAYMIZ */}
-            <div className="p-8 md:p-12 border border-[#FF2020]/20 bg-[#0a0a0a] rounded-sm">
-              <h3 className="font-[family-name:var(--font-heading)] text-2xl md:text-3xl font-bold uppercase text-[#FF2020] mb-8 md:mb-10">
-                ✓ Biz kimlar bilan ishlaymiz
-              </h3>
-              <ul className="space-y-5 md:space-y-7">
-                {[
-                  "O'sishni xohlaydigan biznes egalari",
-                  "Reklama budjeti ajrata oladiganlar",
-                  "KPI asosida ishlashga tayyorlar",
-                  "Uzoq muddatli hamkorlik istovchilar",
-                  "Strategiyani qadrlaydigan rahbarlar",
-                ].map((t, i) => (
-                  <li key={i} className="flex items-start gap-4">
-                    <span className="text-[#FF2020] mt-1 text-lg">●</span>
-                    <span className="font-[family-name:var(--font-body)] text-base md:text-lg text-[#f5f5f5]/70 leading-relaxed">{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* ISHLAMAYMIZ */}
-            <div className="p-8 md:p-12 border border-[#f5f5f5]/10 bg-[#0a0a0a] rounded-sm">
-              <h3 className="font-[family-name:var(--font-heading)] text-2xl md:text-3xl font-bold uppercase text-[#f5f5f5]/40 mb-8 md:mb-10">
-                ✕ Biz kimlar bilan ishlamaymiz
-              </h3>
-              <ul className="space-y-5 md:space-y-7">
-                {[
-                  "SMM ni qutqaruvchi deb bilganlar",
-                  "0 budjet bilan natija kutuvchilar",
-                  "1 haftada mo'jiza kutadiganlar",
-                  "Strategiyasiz ishlamoqchi bo'lganlar",
-                  "Hisob-kitobsiz reklama qilishni xohlovchilar",
-                ].map((t, i) => (
-                  <li key={i} className="flex items-start gap-4">
-                    <span className="text-[#f5f5f5]/20 mt-1 text-lg">●</span>
-                    <span className="font-[family-name:var(--font-body)] text-base md:text-lg text-[#f5f5f5]/30 leading-relaxed">{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+        <div style={{ marginTop: '40vh' }} className="text-center">
+          <h3 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase mb-[5vh]">
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white from-30% to-[#FF2020]">
+              Biz butun O'zbekiston bo'ylab
+            </span>{" "}
+            <span className="text-[#FF2020] md:text-transparent md:bg-clip-text md:bg-gradient-to-b md:from-white md:from-30% md:to-[#FF2020]">
+              ishlaymiz
+            </span>
+          </h3>
+          <div className="hidden md:block h-[5vh]" />
+          <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/50 to-transparent" />
         </div>
       </section>
+
+      {/* ═══════ 3-QISM — BIZ KIMLAR BILAN ISHLAYMIZ (SCROLL ANIMATED) ═══════ */}
+      <WhoWeWorkWith />
 
       {/* ═══════ 4-QISM — BIZ ISHLAYDIGAN SOHALAR ═══════ */}
-      <section className="relative z-20 py-40 md:py-72 px-6 md:px-12 max-w-[1400px] mx-auto">
-        <div ref={(el) => { fadeRefs.current[3] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-6 md:mb-8">
+      <section className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto">
+        <div ref={(el) => { fadeRefs.current[3] = el; }} className="w-full">
+          <h2 style={{ marginBottom: '3vh' }} className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] text-center">
             Biz ishlaydigan <span className="text-[#FF2020]">sohalar</span>
           </h2>
-          <p className="font-[family-name:var(--font-body)] text-base md:text-xl text-[#f5f5f5]/50 mb-16 md:mb-24 max-w-2xl leading-relaxed">
-            Har bir soha uchun alohida strategiya va yondashuv ishlab chiqamiz.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
-            <SectorCard title="Tibbiyot" />
-            <SectorCard title="Chakana savdo" />
-            <SectorCard title="Navastroykalar" />
-            <SectorCard title="Ishlab chiqarish" />
+          <div style={{ marginBottom: '10vh' }} className="flex justify-center w-full">
+            <p className="font-[family-name:var(--font-body)] text-lg md:text-2xl max-w-3xl leading-relaxed text-center text-sweep-red">
+              Har bir soha uchun alohida strategiya va yondashuv ishlab chiqamiz.
+            </p>
           </div>
+          <SectorCinematic />
         </div>
-        <div className="mt-28 h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
+        <div className="mt-[20vh] h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
       </section>
 
-      {/* ═══════ 5-QISM — UCHRASHUV BELGILASH ═══════ */}
-      <section id="contact" className="relative z-20 py-44 md:py-80 px-6 md:px-12 max-w-[1400px] mx-auto">
-        <div ref={(el) => { fadeRefs.current[4] = el; }} className="max-w-4xl mx-auto text-center">
-          <KineticText
-            lines={["HAMKORLIK UCHUN", "UCHRASHUV", "BELGILAYMIZMI?"]}
-          />
-          <p className="font-[family-name:var(--font-body)] text-base md:text-xl text-[#f5f5f5]/50 mt-8 md:mt-12 mb-12 md:mb-16 leading-relaxed">
-            Qisqa registratsiya qoldiring — biznesingizni tahlil qilib, aniq reja beramiz.
-          </p>
-          <a href="#contact-form" className="inline-block px-12 md:px-24 py-6 md:py-10 bg-[#FF2020] text-[#050505]
-                     font-[family-name:var(--font-heading)] text-xl md:text-3xl font-bold uppercase tracking-[0.15em] md:tracking-[0.2em]
-                     hover:bg-[#f5f5f5] transition-colors duration-500 box-glow-strong">
-            Ro&apos;yxatdan o&apos;tish
-          </a>
-        </div>
-      </section>
 
-      {/* ═══════ 6-QISM — QANDAY TARTIBDA ISHLAYMIZ ═══════ */}
-      {/* ═══════ 6-QISM — QANDAY TARTIBDA ISHLAYMIZ (NEW 3D PARALLAX) ═══════ */}
+      {/* ═══════ 5-QISM — QANDAY TARTIBDA ISHLAYMIZ ═══════ */}
       <HowWeWork />
 
-      {/* ═══════ 7-QISM — NATIJALAR ═══════ */}
-      <section id="results" className="relative z-20 py-40 md:py-72 px-6 md:px-12 max-w-[1400px] mx-auto">
+      {/* ── Red section divider ── */}
+      <div className="w-full flex justify-center py-4 md:py-8">
+        <div className="w-[80%] md:w-[60%] h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, #FF2020, transparent)' }} />
+      </div>
+      <div className="h-[30vh]" />
+
+      {/* ═══════ 6-QISM — NATIJALAR ═══════ */}
+      <section id="results" style={{ scrollMarginTop: 100 }} className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[6] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-6 md:mb-8">
+          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-6 md:mb-8 text-center">
             <span className="text-[#FF2020]">Natijalar</span>
           </h2>
-          <p className="font-[family-name:var(--font-body)] text-base md:text-xl text-[#f5f5f5]/50 mb-16 md:mb-24 max-w-2xl leading-relaxed">
-            Har bir loyiha bo&apos;yicha qilgan ishlarimiz va erishilgan natijalar.
-          </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14">
-            <ResultCard
-              nisha="Tibbiyot klinikasi"
-              vazifa="Ijtimoiy tarmoqlarda bemor oqimini oshirish"
-              ishlar="SMM strategiya, kontent ishlab chiqish, maqsadli reklama"
-              kpi="Oyiga +120% murojaat o'sishi"
-            />
-            <ResultCard
-              nisha="Chakana savdo do'koni"
-              vazifa="Online savdolarni ko'paytirish"
-              ishlar="Instagram kontenti, Reels, influencer marketing"
-              kpi="3 oyda savdo +85%"
-            />
-            <ResultCard
-              nisha="Qurilish kompaniyasi"
-              vazifa="Brend tanilishini oshirish"
-              ishlar="Brend strategiya, SMM, performance reklama"
-              kpi="6 oyda 2M+ qamrov"
-            />
+          <div style={{ marginBottom: '5vh' }} className="flex justify-center w-full">
+            <p className="font-[family-name:var(--font-body)] text-lg md:text-2xl max-w-3xl leading-relaxed text-center text-sweep-red">
+              Loyihalarimizdan namunalar — kartalarni bosing yoki bosib turing!
+            </p>
           </div>
+          <SpotlightResults />
         </div>
       </section>
 
-      {/* ═══════ 8-QISM — XIZMATLAR ═══════ */}
-      <section className="relative z-20 py-40 md:py-72 px-6 md:px-12 max-w-[1400px] mx-auto">
-        <div ref={(el) => { fadeRefs.current[7] = el; }}>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-12 md:mb-20">
+      {/* Red divider */}
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-[20vh] md:py-[40vh]">
+        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/50 to-transparent" />
+      </div>
+
+      {/* ═══════ 7-QISM — XIZMATLAR ═══════ */}
+      <div className="h-[30vh]" />
+      <section className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto">
+        <div ref={(el) => { fadeRefs.current[7] = el; }} className="w-full">
+          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6 text-center">
             <span className="text-[#FF2020]">Xizmatlar</span>
           </h2>
-          <div className="grid md:grid-cols-2 gap-10 md:gap-14 max-w-5xl mx-auto">
-            <ServiceCard number="01" title="Strategiya ishlab chiqish" />
-            <ServiceCard number="02" title="Marketing" />
-            <ServiceCard number="03" title="SMM" />
-            <ServiceCard number="04" title="Performance" />
-            <ServiceCard number="05" title="Production" />
+          <div style={{ marginBottom: '8vh' }} className="flex justify-center w-full">
+            <p className="font-[family-name:var(--font-body)] text-lg md:text-2xl max-w-3xl leading-relaxed text-center text-sweep-red">
+              Biznesingizni o&apos;stirish uchun barcha kerakli xizmatlar bir joyda.
+            </p>
+          </div>
+          <div className="w-full">
+            <InteractiveServiceList />
           </div>
         </div>
-        <div className="mt-28 h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
+        <div className="mt-[20vh] h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
       </section>
 
-      {/* ═══════ 9-QISM — HAMKORLAR CAROUSEL (infinite marquee) ═══════ */}
-      <section className="relative z-20 py-40 md:py-72 overflow-hidden">
-        <div className="px-6 md:px-12 max-w-[1400px] mx-auto mb-12 md:mb-20">
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-6">
-            <span className="text-[#FF2020]">Hamkorlarimiz</span>
-          </h2>
-          <p className="font-[family-name:var(--font-body)] text-base md:text-xl text-[#f5f5f5]/50 leading-relaxed">
-            Biz bilan ishlagan kompaniyalar.
+      {/* ═══════ UCHRASHUV BELGILASH ═══════ */}
+      <section id="contact" style={{ scrollMarginTop: 100 }} className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto">
+        <div ref={(el) => { fadeRefs.current[8] = el; }} className="w-full max-w-4xl mx-auto text-center flex flex-col items-center">
+          <KineticText
+            lines={["HAMKORLIK UCHUN", "UCHRASHUV", "BELGILAYMIZMI?"]}
+            centered
+          />
+          <div style={{ height: '20px' }} />
+          <p
+            className="font-[family-name:var(--font-body)] text-xl md:text-3xl mt-8 md:mt-12 leading-relaxed"
+            style={{ animation: 'subtitle-pulse 3s ease-in-out infinite alternate' }}
+          >
+            Qisqa registratsiya qoldiring — biznesingizni tahlil qilib, aniq reja beramiz.
           </p>
+
+          {/* Spacer */}
+          <div style={{ height: '120px' }} />
+
+          <BubbleButton onOpen={openContact} />
+        </div>
+      </section>
+
+      {/* Spacer between Registration and Partners */}
+      {/* Mobile spacer */}
+      <div className="block md:hidden" style={{ height: '80px' }} />
+      {/* Desktop spacer */}
+      <div className="hidden md:block" style={{ height: '400px' }} />
+
+      {/* ═══════ HAMKORLARIMIZ (alohida section) ═══════ */}
+      <section className="relative z-20 py-[20vh] md:py-[30vh] flex flex-col justify-center overflow-hidden">
+        <div className="px-6 md:px-12 max-w-[1400px] mx-auto mb-12 md:mb-20">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-4xl lg:text-5xl font-bold uppercase text-[#f5f5f5] mb-6 text-center">
+            <span className="text-[#f5f5f5]">Hamkorlarimiz</span>
+          </h2>
         </div>
         <div className="relative w-full overflow-hidden">
-          <div ref={marqueeRef} className="flex items-center gap-4 md:gap-12 w-max">
+          <div className="flex items-center gap-4 md:gap-12 w-max animate-nav-marquee hover:pause">
             {[...Array(2)].map((_, setIdx) => (
               <div key={setIdx} className="flex items-center gap-4 md:gap-12">
-                {["BREND A", "BREND B", "BREND C", "BREND D", "BREND E", "BREND F", "BREND G", "BREND H", "BREND I", "BREND J"].map((name, i) => (
+                {["Franklin", "Rivoj-98", "Beshbola Game Club", "MIG Build", "Texno sifat", "Ferton.uz", "Le Crayon", "Humo Med Servis"].map((name, i) => (
                   <div key={`${setIdx}-${i}`}
-                    className="flex-shrink-0 px-5 md:px-8 py-3 md:py-4 border border-[#FF2020]/10 bg-[#0a0a0a] rounded-sm
-                                  font-[family-name:var(--font-heading)] text-xs md:text-base uppercase tracking-[0.1em] md:tracking-[0.15em] text-[#f5f5f5]/30">
+                    className="flex-shrink-0 px-6 md:px-10 py-4 md:py-5 border border-[#FF2020]/10 bg-[#0a0a0a] rounded-sm
+                                  font-[family-name:var(--font-heading)] text-base md:text-2xl uppercase tracking-[0.1em] md:tracking-[0.15em] text-[#f5f5f5]/30">
                     {name}
                   </div>
                 ))}
@@ -455,39 +373,89 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════ 10-QISM — FINAL CTA ═══════ */}
-      <section className="relative z-20 py-44 md:py-80 px-6 md:px-12 max-w-[1400px] mx-auto text-center">
-        <div ref={(el) => { fadeRefs.current[8] = el; }}>
-          <KineticText lines={["SMM ORQALI", "BIZNESINGIZNI", "O'STIRISHGA", "TAYYORMISIZ?"]} />
-          <div className="mt-8 md:mt-12">
-            <a href="#contact" className="group relative inline-block px-8 md:px-16 py-4 md:py-6 bg-[#FF2020] text-[#050505]
-                       font-[family-name:var(--font-heading)] text-sm md:text-xl font-bold uppercase tracking-[0.15em] md:tracking-[0.2em]
-                       hover:bg-[#f5f5f5] transition-colors duration-500 box-glow-strong">
-              <span className="relative z-10">Hamkorlik uchun</span>
-              <div className="absolute inset-0 bg-[#FF2020] opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* Red divider */}
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-[20vh] md:py-[40vh]">
+        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/50 to-transparent" />
+      </div>
+
+
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer className="relative z-20 py-8 md:py-12 px-6 md:px-20 lg:px-32 border-t border-[#FF2020]/10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
-          <Image src="/logo.png" alt="Pi MEDIA" width={60} height={38} className="brightness-110 w-[50px] md:w-[60px]" />
-          <div className="flex items-center gap-4 md:gap-8">
-            {["INSTAGRAM", "TELEGRAM", "LINKEDIN"].map((platform) => (
-              <a key={platform} href="#"
-                className="font-[family-name:var(--font-body)] text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] text-[#f5f5f5]/40
-                            hover:text-[#FF2020] transition-colors duration-300">
-                {platform}
+      <footer className="relative z-20 py-16 md:py-24 px-6 md:px-20 lg:px-32">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Top divider */}
+          <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/20 to-transparent mb-12 md:mb-16" />
+
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-6">
+            {/* Logo — Left aligned on desktop */}
+            <div className="flex-1 flex justify-center md:justify-start">
+              <Image src="/logo.png" alt="Pi MEDIA" width={180} height={114} className="brightness-110 w-[140px] md:w-[150px]" />
+            </div>
+
+            {/* Social Links — Center aligned on desktop */}
+            <div className="flex items-center gap-6 md:gap-10">
+              {/* Facebook */}
+              <a href="https://www.facebook.com/profile.php?id=61579192721658"
+                target="_blank" rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-2 transition-all duration-300"
+                aria-label="Facebook"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 fill-[#FF2020] group-hover:scale-110 transition-colors duration-300">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+                <span className="font-[family-name:var(--font-body)] text-[8px] md:text-[10px] tracking-[0.2em] text-[#f5f5f5]/30 group-hover:text-[#FF2020]/60 transition-colors duration-300 uppercase">Facebook</span>
               </a>
-            ))}
-          </div>
-          <div className="font-[family-name:var(--font-body)] text-[10px] md:text-xs text-[#f5f5f5]/20 tracking-wider">
-            © 2026 BARCHA HUQUQLAR HIMOYALANGAN
+
+              {/* Instagram */}
+              <a href="https://www.instagram.com/pi_media_agency?igsh=YzZrZG4wNTF5bXNi"
+                target="_blank" rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-2 transition-all duration-300"
+                aria-label="Instagram"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 fill-[#FF2020] group-hover:scale-110 transition-colors duration-300">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                </svg>
+                <span className="font-[family-name:var(--font-body)] text-[8px] md:text-[10px] tracking-[0.2em] text-[#f5f5f5]/30 group-hover:text-[#FF2020]/60 transition-colors duration-300 uppercase">Instagram</span>
+              </a>
+
+              {/* Telegram */}
+              <a href="https://t.me/pimedia_agency"
+                target="_blank" rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-2 transition-all duration-300"
+                aria-label="Telegram"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 fill-[#FF2020] group-hover:scale-110 transition-colors duration-300">
+                  <path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                </svg>
+                <span className="font-[family-name:var(--font-body)] text-[8px] md:text-[10px] tracking-[0.2em] text-[#f5f5f5]/30 group-hover:text-[#FF2020]/60 transition-colors duration-300 uppercase">Telegram</span>
+              </a>
+
+              {/* Location */}
+              <a href="https://maps.app.goo.gl/LAoGPmze23ZtZSPN8?g_st=ac"
+                target="_blank" rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-2 transition-all duration-300"
+                aria-label="Joylashuv"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 fill-[#FF2020] group-hover:scale-110 transition-colors duration-300">
+                  <path d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
+                </svg>
+                <span className="font-[family-name:var(--font-body)] text-[8px] md:text-[10px] tracking-[0.2em] text-[#f5f5f5]/30 group-hover:text-[#FF2020]/60 transition-colors duration-300 uppercase">Manzil</span>
+              </a>
+            </div>
+
+            {/* Made by — Right aligned on desktop */}
+            <div className="flex-1 flex justify-center md:justify-end">
+              <a href="https://t.me/notience" target="_blank" rel="noopener noreferrer"
+                className="font-[family-name:var(--font-mono)] text-[10px] md:text-xs text-white/60 tracking-wider hover:text-white transition-colors duration-300">
+                Made by: <span className="text-white border-b border-white pb-0.5 text-sm md:text-base font-bold mx-1">Ξ B ム</span> team
+              </a>
+            </div>
           </div>
         </div>
       </footer>
+
+      {/* ═══════ CONTACT MODAL ═══════ */}
+      <ContactModal isOpen={contactOpen} onClose={closeContact} />
     </main>
   );
 }

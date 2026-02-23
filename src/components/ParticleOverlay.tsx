@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback } from "react";
+import { useLowPower } from "./LowPowerContext";
 
 interface Particle {
     x: number;
@@ -13,27 +14,19 @@ interface Particle {
     color: string;
 }
 
-function isLowEndDevice(): boolean {
-    if (typeof navigator === "undefined") return false;
-    const cores = navigator.hardwareConcurrency || 4;
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-    );
-    return cores <= 4 || isMobile;
-}
-
 export default function ParticleOverlay() {
+    const { isLowPower } = useLowPower();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
     const animFrameRef = useRef<number>(0);
-    const [isLowPower, setIsLowPower] = useState(false);
-    const maxParticles = useRef(120);
 
     const spawnBurst = useCallback(
         (x: number, y: number) => {
-            const burstCount = isLowPower ? 12 : 22;
+            const isMobile = window.innerWidth < 768;
+            const burstCount = isMobile ? 12 : 22;
+            const max = isMobile ? 60 : 120;
             for (let i = 0; i < burstCount; i++) {
-                if (particlesRef.current.length >= maxParticles.current) {
+                if (particlesRef.current.length >= max) {
                     particlesRef.current.shift();
                 }
                 const angle = Math.random() * Math.PI * 2;
@@ -51,20 +44,19 @@ export default function ParticleOverlay() {
                 });
             }
         },
-        [isLowPower]
+        []
     );
 
     useEffect(() => {
-        const lowEnd = isLowEndDevice();
-        setIsLowPower(lowEnd);
-        maxParticles.current = lowEnd ? 60 : 120;
-    }, []);
+        // When LOW is on, skip setup entirely
+        if (isLowPower) return;
 
-    useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
+
+        const isMobile = window.innerWidth < 768;
 
         const resize = () => {
             canvas.width = window.innerWidth;
@@ -73,38 +65,37 @@ export default function ParticleOverlay() {
         resize();
         window.addEventListener("resize", resize);
 
-        /* Only spawn on desktop click */
         const handleClick = (e: MouseEvent) => {
             spawnBurst(e.clientX, e.clientY);
         };
-
         window.addEventListener("click", handleClick);
 
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             particlesRef.current = particlesRef.current.filter((p) => p.alpha > 0.01);
 
-            for (const p of particlesRef.current) {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.05;
-                p.vx *= 0.98;
-                p.alpha -= p.decay;
+            if (particlesRef.current.length > 0) {
+                for (const p of particlesRef.current) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.05;
+                    p.vx *= 0.98;
+                    p.alpha -= p.decay;
 
-                ctx.save();
-                ctx.globalAlpha = p.alpha;
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
 
-                if (!isLowPower) {
-                    ctx.shadowBlur = 20;
-                    ctx.shadowColor = p.color;
+                    if (!isMobile) {
+                        ctx.shadowBlur = 20;
+                        ctx.shadowColor = p.color;
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    ctx.restore();
                 }
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.fill();
-                ctx.restore();
             }
 
             animFrameRef.current = requestAnimationFrame(animate);
@@ -116,8 +107,12 @@ export default function ParticleOverlay() {
             cancelAnimationFrame(animFrameRef.current);
             window.removeEventListener("click", handleClick);
             window.removeEventListener("resize", resize);
+            particlesRef.current = [];
         };
-    }, [spawnBurst, isLowPower]);
+    }, [isLowPower, spawnBurst]);
+
+    // Low power → no canvas
+    if (isLowPower) return null;
 
     return (
         <canvas
