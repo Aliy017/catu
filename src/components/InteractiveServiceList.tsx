@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { isIOS } from "./iosDetect";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -113,6 +114,9 @@ const ServiceCard = React.forwardRef<HTMLDivElement, { service: ServiceItem }>(
         const glowRef = useRef<HTMLDivElement>(null);
 
         const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+            // Skip 3D tilt on iOS to avoid compositing layer explosion
+            if (isIOS()) return;
+
             const card = innerRef.current;
             const glow = glowRef.current;
             if (!card || !glow) return;
@@ -151,10 +155,13 @@ const ServiceCard = React.forwardRef<HTMLDivElement, { service: ServiceItem }>(
                     className="group relative h-[160px] md:h-[320px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer transition-transform duration-200 ease-out"
                     style={{ transformStyle: "preserve-3d" }}
                 >
-                    {/* ── Animated Gradient Border ── */}
+                    {/* ── Animated Gradient Border (with iOS fallback) ── */}
                     <div
                         className="absolute inset-0 rounded-3xl opacity-60 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{
+                        style={isIOS() ? {
+                            background: `linear-gradient(135deg, ${service.accent}, ${service.accentEnd}, #000, ${service.accent})`,
+                            animation: "borderGlowPulse 4s ease-in-out infinite",
+                        } : {
                             background: `linear-gradient(var(--border-angle, 0deg), ${service.accent}, ${service.accentEnd}, #000, #000, ${service.accent})`,
                             animation: "rotateBorder 6s linear infinite",
                         }}

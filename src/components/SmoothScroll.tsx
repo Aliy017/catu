@@ -5,6 +5,7 @@ import Lenis from "@studio-freight/lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLowPower } from "./LowPowerContext";
+import { isIOS } from "./iosDetect";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,8 +18,8 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     const lenisRef = useRef<Lenis | null>(null);
 
     useEffect(() => {
-        // When LOW is on, skip Lenis setup
-        if (isLowPower) return;
+        // When LOW is on or iOS (native momentum is better), skip Lenis setup
+        if (isLowPower || isIOS()) return;
 
         const lenis = new Lenis({
             duration: 1.4,

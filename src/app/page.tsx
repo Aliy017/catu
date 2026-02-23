@@ -11,6 +11,7 @@ import KineticText from "@/components/KineticText";
 import RichTypewriter from "@/components/RichTypewriter";
 import BubbleButton from "@/components/BubbleButton";
 import ScrollArrow from "@/components/ScrollArrow";
+import { isIOS } from "@/components/iosDetect";
 
 // ⚡ Dynamic imports — below-fold heavy components (lazy load for speed)
 const HowWeWork = dynamic(() => import("@/components/HowWeWork"), { ssr: false });
@@ -27,6 +28,11 @@ gsap.registerPlugin(ScrollTrigger);
    ══════════════════════════════════════════════════════ */
 function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
   const [visible, setVisible] = useState(false);
+  const [ios, setIos] = useState(false);
+
+  useEffect(() => {
+    setIos(isIOS());
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,7 +57,7 @@ function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
         : "-translate-y-full opacity-0"
         }`}
     >
-      <div className="bg-[#050505]/85 backdrop-blur-md border-b border-[#f5f5f5]/5">
+      <div className={`border-b border-[#f5f5f5]/5 ${ios ? "bg-[#050505]/95" : "bg-[#050505]/85 backdrop-blur-md"}`}>
         <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-3 md:py-4 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex-shrink-0">

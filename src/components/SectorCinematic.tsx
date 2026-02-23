@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { isIOS } from "./iosDetect";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -127,9 +128,9 @@ function CinematicCard({ sector }: { sector: SectorItem }) {
 
                 {/* Content — Glass Card at Bottom */}
                 <div className="absolute bottom-3 left-3 right-3 md:bottom-5 md:left-5 md:right-5 z-10">
-                    <div className="bg-black/50 backdrop-blur-lg border border-white/10 rounded-xl p-4 md:p-6
+                    <div className={`${isIOS() ? 'bg-black/80' : 'bg-black/50 backdrop-blur-lg'} border border-white/10 rounded-xl p-4 md:p-6
                                     translate-y-2 group-hover:translate-y-0 transition-transform duration-500
-                                    flex flex-col items-center text-center">
+                                    flex flex-col items-center text-center`}>
                         <h3 className="font-[family-name:var(--font-heading)] text-2xl md:text-4xl font-bold uppercase text-white mb-2 tracking-tighter">
                             {sector.title}
                         </h3>

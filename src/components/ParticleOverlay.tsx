@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import { useLowPower } from "./LowPowerContext";
+import { isIOS } from "./iosDetect";
 
 interface Particle {
     x: number;
@@ -48,8 +49,8 @@ export default function ParticleOverlay() {
     );
 
     useEffect(() => {
-        // When LOW is on, skip setup entirely
-        if (isLowPower) return;
+        // When LOW is on or iOS, skip setup entirely
+        if (isLowPower || isIOS()) return;
 
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -111,8 +112,8 @@ export default function ParticleOverlay() {
         };
     }, [isLowPower, spawnBurst]);
 
-    // Low power → no canvas
-    if (isLowPower) return null;
+    // Low power or iOS → no canvas
+    if (isLowPower || isIOS()) return null;
 
     return (
         <canvas

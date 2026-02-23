@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import NextImage from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { isIOS } from "./iosDetect";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,8 +68,9 @@ export default function HeroSequence() {
             const img = images[clampedIndex];
             if (!img || !img.complete || img.naturalWidth === 0) return;
 
-            /* DPR-aware canvas for sharper rendering on Retina displays */
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            /* DPR-aware canvas — limit to 1 on iOS to avoid 3x retina overhead */
+            const ios = isIOS();
+            const dpr = ios ? 1 : Math.min(window.devicePixelRatio || 1, 2);
             const w = window.innerWidth;
             const h = window.innerHeight;
             canvas.width = w * dpr;
@@ -79,10 +81,12 @@ export default function HeroSequence() {
 
             /* High-quality rendering */
             ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = "high";
+            ctx.imageSmoothingQuality = ios ? "medium" : "high";
 
-            /* Boost contrast & saturation, slightly dim brightness for premium cinematic look */
-            ctx.filter = "contrast(1.18) brightness(0.98) saturate(1.25)";
+            /* Boost contrast & saturation — skip on iOS (ctx.filter unsupported) */
+            if (!ios) {
+                ctx.filter = "contrast(1.18) brightness(0.98) saturate(1.25)";
+            }
 
             const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
             const x = (w - img.naturalWidth * scale) / 2;
@@ -91,17 +95,17 @@ export default function HeroSequence() {
             ctx.clearRect(0, 0, w, h);
             ctx.drawImage(img, x, y, img.naturalWidth * scale, img.naturalHeight * scale);
 
-            /* ── Unsharp Mask (sharpening) ── */
-            /* Draw a blurred copy, then subtract it from the original to enhance edges */
-            ctx.filter = "blur(1px)";
-            ctx.globalAlpha = 0.15;
-            ctx.globalCompositeOperation = "difference";
-            ctx.drawImage(canvas, 0, 0, w, h);
+            /* ── Unsharp Mask (sharpening) — skip on iOS ── */
+            if (!ios) {
+                ctx.filter = "blur(1px)";
+                ctx.globalAlpha = 0.15;
+                ctx.globalCompositeOperation = "difference";
+                ctx.drawImage(canvas, 0, 0, w, h);
 
-            /* Reset all */
-            ctx.globalCompositeOperation = "source-over";
-            ctx.globalAlpha = 1;
-            ctx.filter = "none";
+                ctx.globalCompositeOperation = "source-over";
+                ctx.globalAlpha = 1;
+                ctx.filter = "none";
+            }
         },
         [images]
     );
