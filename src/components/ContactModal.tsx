@@ -208,10 +208,10 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         const urlParams = new URLSearchParams(window.location.search);
 
         try {
-            // API endpoint: dev rejimda localhost:3001, production da o'z serverga
+            // API endpoint: dev rejimda localhost:3001, production da mysayt.uz ga
             const apiUrl = process.env.NODE_ENV === "development"
                 ? "http://localhost:3001/api/leads"
-                : "/api/leads";
+                : "https://mysayt.uz/api/leads";
 
             const res = await fetch(apiUrl, {
                 method: "POST",
