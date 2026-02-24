@@ -77,8 +77,8 @@ function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
                 key={link.label}
                 href={link.href}
                 onClick={link.href === "#contact" ? (e: React.MouseEvent) => { e.preventDefault(); onOpenContact(); } : undefined}
-                className="nav-link-shimmer font-[family-name:var(--font-body)] text-xs md:text-sm font-medium uppercase tracking-wider
-                           hover:text-[#FF2020] transition-all duration-300 cursor-pointer min-h-[44px] flex items-center"
+                className="nav-link-shimmer font-[family-name:var(--font-body)] text-[10px] md:text-sm font-medium uppercase tracking-wider
+                           hover:text-[#FF2020] transition-all duration-300 cursor-pointer py-3"
               >
                 {link.label}
               </a>

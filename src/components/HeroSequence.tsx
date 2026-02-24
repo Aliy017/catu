@@ -9,42 +9,78 @@ import { isIOS } from "./iosDetect";
 gsap.registerPlugin(ScrollTrigger);
 
 const FRAME_COUNT = 98;
+const INITIAL_BATCH = 5;    // First frames to show loader quickly
+const BATCH_SIZE = 10;       // Background loading batch size
 
 function getFramePath(index: number): string {
     const num = String(index).padStart(3, "0");
     return `/frames/ezgif-frame-${num}.webp`;
 }
 
-function useImagePreloader(frameCount: number) {
+/**
+ * Progressive image preloader:
+ * Phase 1: Load first 5 frames → mark as "loaded" (loader disappears ~1s)
+ * Phase 2: Load remaining frames in background batches of 10
+ */
+function useProgressivePreloader(frameCount: number) {
     const [images, setImages] = useState<HTMLImageElement[]>([]);
     const [progress, setProgress] = useState(0);
     const [loaded, setLoaded] = useState(false);
+    const imgsRef = useRef<HTMLImageElement[]>([]);
 
     useEffect(() => {
-        const imgs: HTMLImageElement[] = [];
-        let loadedCount = 0;
+        const imgs: HTMLImageElement[] = new Array(frameCount);
+        imgsRef.current = imgs;
+        let totalLoaded = 0;
 
-        for (let i = 1; i <= frameCount; i++) {
-            const img = new Image();
-            img.src = getFramePath(i);
-            img.onload = () => {
-                loadedCount++;
-                setProgress(Math.floor((loadedCount / frameCount) * 100));
-                if (loadedCount === frameCount) {
-                    setImages(imgs);
-                    setLoaded(true);
-                }
-            };
-            img.onerror = () => {
-                loadedCount++;
-                setProgress(Math.floor((loadedCount / frameCount) * 100));
-                if (loadedCount === frameCount) {
-                    setImages(imgs);
-                    setLoaded(true);
-                }
-            };
-            imgs.push(img);
+        function updateProgress() {
+            totalLoaded++;
+            setProgress(Math.floor((totalLoaded / frameCount) * 100));
         }
+
+        function loadImage(index: number): Promise<void> {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.src = getFramePath(index + 1); // 1-indexed paths
+                img.onload = () => {
+                    imgs[index] = img;
+                    updateProgress();
+                    resolve();
+                };
+                img.onerror = () => {
+                    imgs[index] = img;
+                    updateProgress();
+                    resolve();
+                };
+            });
+        }
+
+        async function loadAll() {
+            // ═══ Phase 1: Load first INITIAL_BATCH frames fast ═══
+            const initialPromises: Promise<void>[] = [];
+            for (let i = 0; i < Math.min(INITIAL_BATCH, frameCount); i++) {
+                initialPromises.push(loadImage(i));
+            }
+            await Promise.all(initialPromises);
+
+            // Show content immediately with initial frames
+            setImages([...imgs]);
+            setLoaded(true);
+
+            // ═══ Phase 2: Load remaining frames in background batches ═══
+            for (let start = INITIAL_BATCH; start < frameCount; start += BATCH_SIZE) {
+                const end = Math.min(start + BATCH_SIZE, frameCount);
+                const batchPromises: Promise<void>[] = [];
+                for (let i = start; i < end; i++) {
+                    batchPromises.push(loadImage(i));
+                }
+                await Promise.all(batchPromises);
+                // Update images ref after each batch
+                setImages([...imgs]);
+            }
+        }
+
+        loadAll();
     }, [frameCount]);
 
     return { images, progress, loaded };
@@ -54,7 +90,7 @@ export default function HeroSequence() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
-    const { images, progress, loaded } = useImagePreloader(FRAME_COUNT);
+    const { images, progress, loaded } = useProgressivePreloader(FRAME_COUNT);
     const frameIndexRef = useRef({ value: 0 });
 
     const drawFrame = useCallback(
@@ -147,6 +183,7 @@ export default function HeroSequence() {
         window.addEventListener("resize", handleResize);
 
         return () => {
+            clearTimeout(timer);
             tl.kill();
             window.removeEventListener("resize", handleResize);
         };
