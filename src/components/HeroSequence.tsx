@@ -9,8 +9,8 @@ import { isIOS } from "./iosDetect";
 gsap.registerPlugin(ScrollTrigger);
 
 const FRAME_COUNT = 98;
-const INITIAL_BATCH = 5;    // First frames to show loader quickly
-const BATCH_SIZE = 10;       // Background loading batch size
+const INITIAL_BATCH = 8;     // First frames to show loader quickly
+const BATCH_SIZE = 15;        // Background loading batch size
 
 function getFramePath(index: number): string {
     const num = String(index).padStart(3, "0");
@@ -18,56 +18,45 @@ function getFramePath(index: number): string {
 }
 
 /**
- * Progressive image preloader:
- * Phase 1: Load first 5 frames → mark as "loaded" (loader disappears ~1s)
- * Phase 2: Load remaining frames in background batches of 10
+ * Progressive image preloader using refs (no re-renders during background loading).
+ * Phase 1: Load first INITIAL_BATCH frames → mark "loaded" (loader disappears)
+ * Phase 2: Load remaining frames in background — NO state changes, NO re-renders
  */
 function useProgressivePreloader(frameCount: number) {
-    const [images, setImages] = useState<HTMLImageElement[]>([]);
+    // Use ref for images array — avoids re-renders that break GSAP timeline
+    const imgsRef = useRef<(HTMLImageElement | null)[]>(new Array(frameCount).fill(null));
     const [progress, setProgress] = useState(0);
     const [loaded, setLoaded] = useState(false);
-    const imgsRef = useRef<HTMLImageElement[]>([]);
+    const loadedCountRef = useRef(0);
 
     useEffect(() => {
-        const imgs: HTMLImageElement[] = new Array(frameCount);
-        imgsRef.current = imgs;
-        let totalLoaded = 0;
-
-        function updateProgress() {
-            totalLoaded++;
-            setProgress(Math.floor((totalLoaded / frameCount) * 100));
-        }
+        const imgs = imgsRef.current;
 
         function loadImage(index: number): Promise<void> {
             return new Promise((resolve) => {
                 const img = new Image();
                 img.src = getFramePath(index + 1); // 1-indexed paths
-                img.onload = () => {
+                const onDone = () => {
                     imgs[index] = img;
-                    updateProgress();
+                    loadedCountRef.current++;
+                    setProgress(Math.floor((loadedCountRef.current / frameCount) * 100));
                     resolve();
                 };
-                img.onerror = () => {
-                    imgs[index] = img;
-                    updateProgress();
-                    resolve();
-                };
+                img.onload = onDone;
+                img.onerror = onDone;
             });
         }
 
         async function loadAll() {
-            // ═══ Phase 1: Load first INITIAL_BATCH frames fast ═══
+            // Phase 1: Load initial batch fast
             const initialPromises: Promise<void>[] = [];
             for (let i = 0; i < Math.min(INITIAL_BATCH, frameCount); i++) {
                 initialPromises.push(loadImage(i));
             }
             await Promise.all(initialPromises);
+            setLoaded(true); // Loader disappears — no images state change!
 
-            // Show content immediately with initial frames
-            setImages([...imgs]);
-            setLoaded(true);
-
-            // ═══ Phase 2: Load remaining frames in background batches ═══
+            // Phase 2: Background batches — only setProgress, no images state
             for (let start = INITIAL_BATCH; start < frameCount; start += BATCH_SIZE) {
                 const end = Math.min(start + BATCH_SIZE, frameCount);
                 const batchPromises: Promise<void>[] = [];
@@ -75,34 +64,57 @@ function useProgressivePreloader(frameCount: number) {
                     batchPromises.push(loadImage(i));
                 }
                 await Promise.all(batchPromises);
-                // Update images ref after each batch
-                setImages([...imgs]);
             }
         }
 
         loadAll();
     }, [frameCount]);
 
-    return { images, progress, loaded };
+    return { imgsRef, progress, loaded };
 }
 
 export default function HeroSequence() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
-    const { images, progress, loaded } = useProgressivePreloader(FRAME_COUNT);
+    const { imgsRef, progress, loaded } = useProgressivePreloader(FRAME_COUNT);
     const frameIndexRef = useRef({ value: 0 });
+    const lastDrawnRef = useRef(-1); // Track last successfully drawn frame
 
     const drawFrame = useCallback(
         (index: number) => {
             const canvas = canvasRef.current;
-            if (!canvas || !images.length) return;
+            const imgs = imgsRef.current;
+            if (!canvas || !imgs.length) return;
             const ctx = canvas.getContext("2d");
             if (!ctx) return;
 
-            const clampedIndex = Math.min(Math.max(0, Math.floor(index)), images.length - 1);
-            const img = images[clampedIndex];
-            if (!img || !img.complete || img.naturalWidth === 0) return;
+            const clampedIndex = Math.min(Math.max(0, Math.floor(index)), imgs.length - 1);
+
+            // Find the best available frame: requested frame, or nearest loaded one
+            let img = imgs[clampedIndex];
+            if (!img || !img.complete || img.naturalWidth === 0) {
+                // Search for nearest loaded frame (prefer backwards, then forwards)
+                let bestIdx = -1;
+                for (let offset = 1; offset < imgs.length; offset++) {
+                    const back = clampedIndex - offset;
+                    const fwd = clampedIndex + offset;
+                    if (back >= 0 && imgs[back]?.complete && imgs[back]!.naturalWidth > 0) {
+                        bestIdx = back;
+                        break;
+                    }
+                    if (fwd < imgs.length && imgs[fwd]?.complete && imgs[fwd]!.naturalWidth > 0) {
+                        bestIdx = fwd;
+                        break;
+                    }
+                }
+                if (bestIdx < 0) return; // No frames loaded at all
+                img = imgs[bestIdx]!;
+            }
+
+            // Skip redraw if same frame to save CPU
+            if (lastDrawnRef.current === clampedIndex && img === imgs[clampedIndex]) return;
+            lastDrawnRef.current = clampedIndex;
 
             /* DPR-aware canvas — limit to 1 on iOS or mobile to avoid retina overhead */
             const ios = isIOS();
@@ -110,11 +122,16 @@ export default function HeroSequence() {
             const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
             const w = window.innerWidth;
             const h = window.innerHeight;
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            canvas.style.width = w + "px";
-            canvas.style.height = h + "px";
-            ctx.scale(dpr, dpr);
+
+            // Only resize canvas when dimensions actually change
+            if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+                canvas.width = w * dpr;
+                canvas.height = h * dpr;
+                canvas.style.width = w + "px";
+                canvas.style.height = h + "px";
+            }
+
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
             /* High-quality rendering */
             ctx.imageSmoothingEnabled = true;
@@ -144,13 +161,13 @@ export default function HeroSequence() {
                 ctx.filter = "none";
             }
         },
-        [images]
+        [imgsRef]
     );
 
     useEffect(() => {
         if (!loaded || !containerRef.current || !canvasRef.current || !overlayRef.current) return;
 
-        // Force draw immediately and slightly delayed to ensure visibility
+        // Force draw immediately
         requestAnimationFrame(() => drawFrame(0));
         const timer = setTimeout(() => drawFrame(0), 100);
 
@@ -160,9 +177,9 @@ export default function HeroSequence() {
                 trigger: containerRef.current,
                 start: "top top",
                 end: "bottom bottom",
-                scrub: 0.5, // smooth scrubbing
+                scrub: 0.5,
                 pin: ".hero-pinned-wrapper",
-                pinSpacing: false, // We use fixed container height
+                pinSpacing: false,
                 invalidateOnRefresh: true,
             },
         });
@@ -172,11 +189,14 @@ export default function HeroSequence() {
             value: FRAME_COUNT - 1,
             ease: "none",
             onUpdate: () => {
+                // Reset lastDrawn to force redraw when scrolling
+                lastDrawnRef.current = -1;
                 drawFrame(frameIndexRef.current.value);
             },
         });
 
         const handleResize = () => {
+            lastDrawnRef.current = -1; // Force redraw on resize
             ScrollTrigger.refresh();
             drawFrame(frameIndexRef.current.value);
         };
@@ -285,7 +305,7 @@ export default function HeroSequence() {
             </div>
 
             {/* Pinned wrapper — always visible but behind loader initially */}
-            <div className="hero-pinned-wrapper w-full h-screen">
+            <div className="hero-pinned-wrapper w-full h-screen relative">
                 {/* Canvas */}
                 <canvas
                     ref={canvasRef}
@@ -293,10 +313,12 @@ export default function HeroSequence() {
                     style={{ imageRendering: "crisp-edges" }}
                 />
 
-                {/* Gradient + Text Overlay — inside the pinned wrapper, so it unpins with canvas */}
-                <div ref={overlayRef} className="pointer-events-none absolute inset-0 w-full h-full z-10">
+                {/* Gradient + Text Overlay — inside the pinned wrapper, fixed positioning for stability */}
+                <div ref={overlayRef} className="pointer-events-none absolute inset-0 w-full h-full z-10"
+                    style={{ willChange: "auto" }}>
                     <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#050505] to-transparent" />
-                    <div className="absolute bottom-12 md:bottom-20 left-0 w-full px-6 md:px-16 z-20 flex flex-col items-start gap-4 md:gap-5">
+                    <div className="absolute left-0 w-full px-6 md:px-16 z-20 flex flex-col items-start gap-4 md:gap-5"
+                        style={{ bottom: "clamp(48px, 8vh, 80px)" }}>
                         <span className="font-[family-name:var(--font-heading)] text-[#f5f5f5]/40 text-xs sm:text-sm md:text-lg lg:text-2xl font-medium tracking-[0.15em] md:tracking-[0.2em] uppercase">
                             IJTIMOIY TARMOQ MUTAXASSISI
                         </span>
