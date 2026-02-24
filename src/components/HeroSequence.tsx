@@ -68,9 +68,10 @@ export default function HeroSequence() {
             const img = images[clampedIndex];
             if (!img || !img.complete || img.naturalWidth === 0) return;
 
-            /* DPR-aware canvas — limit to 1 on iOS to avoid 3x retina overhead */
+            /* DPR-aware canvas — limit to 1 on iOS or mobile to avoid retina overhead */
             const ios = isIOS();
-            const dpr = ios ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+            const isMobile = ios || window.innerWidth < 768;
+            const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
             const w = window.innerWidth;
             const h = window.innerHeight;
             canvas.width = w * dpr;

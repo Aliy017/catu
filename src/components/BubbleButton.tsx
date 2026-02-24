@@ -111,7 +111,7 @@ export default function BubbleButton({ compact = false, onOpen }: { compact?: bo
                    box-glow-strong
                    ${compact
                         ? 'px-16 sm:px-20 md:px-32 py-6 sm:py-8 md:py-10 text-base sm:text-lg md:text-2xl tracking-[0.12em] md:tracking-[0.18em]'
-                        : 'px-32 sm:px-36 md:px-64 py-12 sm:py-14 md:py-20 text-2xl sm:text-3xl md:text-6xl tracking-[0.15em] md:tracking-[0.2em]'
+                        : 'px-12 sm:px-20 md:px-64 py-6 sm:py-10 md:py-20 text-lg sm:text-2xl md:text-6xl tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em]'
                     }`}
             >
                 Ro&apos;yxatdan o&apos;tish

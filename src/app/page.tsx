@@ -71,14 +71,14 @@ function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
           </a>
 
           {/* Nav links */}
-          <div className="flex items-center gap-3 md:gap-8">
+          <div className="flex items-center gap-4 md:gap-8">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={link.href === "#contact" ? (e: React.MouseEvent) => { e.preventDefault(); onOpenContact(); } : undefined}
-                className="nav-link-shimmer font-[family-name:var(--font-body)] text-[10px] md:text-sm font-medium uppercase tracking-wider
-                           hover:text-[#FF2020] transition-all duration-300 cursor-pointer"
+                className="nav-link-shimmer font-[family-name:var(--font-body)] text-xs md:text-sm font-medium uppercase tracking-wider
+                           hover:text-[#FF2020] transition-all duration-300 cursor-pointer min-h-[44px] flex items-center"
               >
                 {link.label}
               </a>
@@ -166,7 +166,7 @@ export default function Home() {
       <ScrollArrow />
 
       {/* ═══════ 1-QISM — ASOSIY SARLAVHA ═══════ */}
-      <section className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
+      <section className="relative z-20 py-[10vh] md:py-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
         <KineticText
           lines={["NATIJA", "BO'LMAGUNCHA", "XIZMAT", "QILAMIZ."]}
           className="mb-10"
@@ -187,7 +187,7 @@ export default function Home() {
                 className="font-[family-name:var(--font-body)] text-lg md:text-2xl lg:text-3xl text-[#f5f5f5]/60 font-light leading-[1.6] md:leading-[1.9] tracking-wide"
               />
             </div>
-            <div className="h-[40vh] md:h-[60vh]" />
+            <div className="h-[15vh] md:h-[60vh]" />
             <div className="flex justify-center">
               <BubbleButton onOpen={openContact} />
             </div>
@@ -198,7 +198,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
-      <section id="partners" style={{ scrollMarginTop: 100 }} className="relative z-20 mt-[20vh] md:mt-[40vh] pt-[60vh] pb-[30vh] md:pt-[80vh] md:pb-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
+      <section id="partners" style={{ scrollMarginTop: 100 }} className="relative z-20 mt-[10vh] md:mt-[40vh] pt-[20vh] pb-[15vh] md:pt-[80vh] md:pb-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
         <div ref={(el) => { fadeRefs.current[1] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6 text-center">
             Biz bilan ishlagan <span className="text-[#FF2020]">hamkorlar</span>

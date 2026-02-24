@@ -361,7 +361,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                             </div>
 
                             {/* ── Main content ── */}
-                            <div className="relative z-[2] px-7 pb-7 pt-0 md:px-14 md:pb-10 md:pt-0">
+                            <div className="relative z-[2] px-5 pb-5 pt-0 md:px-14 md:pb-10 md:pt-0">
 
                                 {/* ── Title ── */}
                                 <h2 className="font-[family-name:var(--font-rounded)] text-[26px] md:text-[32px] font-bold text-white leading-[1.15] text-center" style={{ marginBottom: "12px" }}>

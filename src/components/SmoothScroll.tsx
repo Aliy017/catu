@@ -18,8 +18,8 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     const lenisRef = useRef<Lenis | null>(null);
 
     useEffect(() => {
-        // When LOW is on or iOS (native momentum is better), skip Lenis setup
-        if (isLowPower || isIOS()) return;
+        // Skip Lenis on low-power, iOS, or any mobile (< 768px) — native scroll is smoother
+        if (isLowPower || isIOS() || window.innerWidth < 768) return;
 
         const lenis = new Lenis({
             duration: 1.4,

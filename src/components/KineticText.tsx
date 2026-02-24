@@ -64,7 +64,7 @@ export default function KineticText({
                     className="overflow-hidden"
                 >
                     <div className={`kinetic-inner font-[family-name:var(--font-heading)] 
-                                     text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 
+                                     text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl 
                                      font-bold uppercase leading-[1.1] tracking-tight 
                                      ${centered ? 'text-center w-full mx-auto' : 'text-center md:text-left'}`}
                         style={isLowPower ? { opacity: 1, transform: 'none' } : undefined}
