@@ -34,9 +34,9 @@ export default function HowWeWork() {
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: "top top",
-                    end: "+=150%",          // balanced scroll duration
+                    end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=100%" : "+=150%",
                     pin: true,
-                    scrub: 1.2,             // smooth inertia feel
+                    scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.3 : 1.2,
                     anticipatePin: 1,
                 },
             });

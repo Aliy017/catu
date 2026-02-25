@@ -128,7 +128,7 @@ function CinematicCard({ sector }: { sector: SectorItem }) {
 
                 {/* Content — Glass Card at Bottom */}
                 <div className="absolute bottom-3 left-3 right-3 md:bottom-5 md:left-5 md:right-5 z-10">
-                    <div className={`${isIOS() ? 'bg-black/80' : 'bg-black/50 backdrop-blur-lg'} border border-white/10 rounded-xl p-4 md:p-6
+                    <div className={`bg-black/80 border border-white/10 rounded-xl p-4 md:p-6
                                     translate-y-2 group-hover:translate-y-0 transition-transform duration-500
                                     flex flex-col items-center text-center`}>
                         <h3 className="font-[family-name:var(--font-heading)] text-2xl md:text-4xl font-bold uppercase text-white mb-2 tracking-tighter">

@@ -61,9 +61,9 @@ export default function WhoWeWorkWith() {
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: "top top",
-                    end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=200%" : "+=350%",
+                    end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=150%" : "+=350%",
                     pin: true,
-                    scrub: 1,
+                    scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.3 : 1,
                     anticipatePin: 1,
                 },
             });
@@ -207,8 +207,8 @@ export default function WhoWeWorkWith() {
             <div
                 ref={glowRef}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                           w-[500px] h-[500px] md:w-[700px] md:h-[700px]
-                           rounded-full blur-[150px] opacity-0
+                           w-[300px] h-[300px] md:w-[700px] md:h-[700px]
+                           rounded-full blur-[80px] md:blur-[150px] opacity-0
                            bg-[#FF2020] pointer-events-none z-0"
             />
 

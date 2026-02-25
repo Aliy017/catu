@@ -57,7 +57,7 @@ function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
         : "-translate-y-full opacity-0"
         }`}
     >
-      <div className={`border-b border-[#f5f5f5]/5 ${ios ? "bg-[#050505]/95" : "bg-[#050505]/85 backdrop-blur-md"}`}>
+      <div className={`border-b border-[#f5f5f5]/5 ${ios || typeof window !== 'undefined' && window.innerWidth < 768 ? "bg-[#050505]/95" : "bg-[#050505]/85 backdrop-blur-md"}`}>
         <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-3 md:py-4 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex-shrink-0">
