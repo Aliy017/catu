@@ -137,10 +137,7 @@ export default function HeroSequence() {
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = ios ? "medium" : "high";
 
-            /* Boost contrast & saturation — skip on iOS (ctx.filter unsupported) */
-            if (!ios) {
-                ctx.filter = "contrast(1.18) brightness(0.98) saturate(1.25)";
-            }
+            /* Clean render — no heavy ctx.filter for performance */
 
             const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
             const x = (w - img.naturalWidth * scale) / 2;
@@ -148,18 +145,6 @@ export default function HeroSequence() {
 
             ctx.clearRect(0, 0, w, h);
             ctx.drawImage(img, x, y, img.naturalWidth * scale, img.naturalHeight * scale);
-
-            /* ── Unsharp Mask (sharpening) — skip on iOS ── */
-            if (!ios) {
-                ctx.filter = "blur(1px)";
-                ctx.globalAlpha = 0.15;
-                ctx.globalCompositeOperation = "difference";
-                ctx.drawImage(canvas, 0, 0, w, h);
-
-                ctx.globalCompositeOperation = "source-over";
-                ctx.globalAlpha = 1;
-                ctx.filter = "none";
-            }
         },
         [imgsRef]
     );

@@ -108,53 +108,6 @@ const GRID_SPANS = [
 ];
 
 /* ═══════════════════════════════════════════════════════
-   FLOATING PARTICLES — luxury effect
-   ═══════════════════════════════════════════════════════ */
-function FloatingParticles({ accent }: { accent: string }) {
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!containerRef.current) return;
-        const ctx = gsap.context(() => {
-            Array.from(containerRef.current!.children).forEach((p) => {
-                gsap.to(p, {
-                    x: `random(-60, 60)`,
-                    y: `random(-80, 80)`,
-                    opacity: `random(0.15, 0.5)`,
-                    scale: `random(0.5, 1.5)`,
-                    duration: `random(4, 8)`,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: "sine.inOut",
-                    delay: `random(0, 3)`,
-                });
-            });
-        }, containerRef);
-        return () => ctx.revert();
-    }, []);
-
-    return (
-        <div ref={containerRef} className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
-            {Array.from({ length: 12 }).map((_, i) => (
-                <div
-                    key={i}
-                    className="absolute rounded-full"
-                    style={{
-                        width: `${4 + Math.random() * 8}px`,
-                        height: `${4 + Math.random() * 8}px`,
-                        left: `${10 + Math.random() * 80}%`,
-                        top: `${10 + Math.random() * 80}%`,
-                        background: `radial-gradient(circle, ${accent}60, ${accent}10)`,
-                        opacity: 0.2,
-                        filter: "blur(1px)",
-                    }}
-                />
-            ))}
-        </div>
-    );
-}
-
-/* ═══════════════════════════════════════════════════════
    EXPANDED MODAL — Premium Luxury
    ═══════════════════════════════════════════════════════ */
 function ExpandedModal({ item, onClose }: { item: PortfolioItem; onClose: () => void }) {
@@ -233,7 +186,8 @@ function ExpandedModal({ item, onClose }: { item: PortfolioItem; onClose: () => 
                             backgroundSize: "20px 20px",
                         }}
                     />
-                    <FloatingParticles accent={item.accent} />
+
+
 
                     {/* Glow orbs */}
                     <div
