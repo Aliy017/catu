@@ -20,6 +20,18 @@
   box-sizing: border-box;
 }
 
+/* KineticText autoPlay animation — pure CSS, no GSAP */
+@keyframes kinetic-rise {
+  from {
+    opacity: 0;
+    transform: translateY(25%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 html {
   scroll-behavior: auto;
   overflow-x: hidden;

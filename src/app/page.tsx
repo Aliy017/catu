@@ -5,12 +5,10 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import HeroSequence from "@/components/HeroSequence";
 import ParticleOverlay from "@/components/ParticleOverlay";
 import KineticText from "@/components/KineticText";
 import RichTypewriter from "@/components/RichTypewriter";
 import BubbleButton from "@/components/BubbleButton";
-import ScrollArrow from "@/components/ScrollArrow";
 import { isIOS } from "@/components/iosDetect";
 
 // ⚡ Dynamic imports — below-fold heavy components (lazy load for speed)
@@ -27,21 +25,12 @@ gsap.registerPlugin(ScrollTrigger);
    NAVBAR — appears after hero, sticks to top
    ══════════════════════════════════════════════════════ */
 function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
-  const [visible, setVisible] = useState(false);
   const [ios, setIos] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIos(isIOS());
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      // Show navbar after scrolling past hero (roughly 100vh)
-      setVisible(window.scrollY > window.innerHeight * 0.8);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    setIsMobile(window.innerWidth < 768);
   }, []);
 
   const navLinks = [
@@ -52,12 +41,9 @@ function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${visible
-        ? "translate-y-0 opacity-100"
-        : "-translate-y-full opacity-0"
-        }`}
+      className="fixed top-0 left-0 w-full z-50"
     >
-      <div className={`border-b border-[#f5f5f5]/5 ${ios || typeof window !== 'undefined' && window.innerWidth < 768 ? "bg-[#050505]/95" : "bg-[#050505]/85 backdrop-blur-md"}`}>
+      <div className={`border-b border-[#f5f5f5]/5 ${ios || isMobile ? "bg-[#050505]/95" : "bg-[#050505]/85 backdrop-blur-md"}`}>
         <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-3 md:py-4 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex-shrink-0">
@@ -161,15 +147,15 @@ export default function Home() {
       <ParticleOverlay />
       <Navbar onOpenContact={openContact} />
 
-      {/* ═══════ HERO — CANVAS IMAGE SEQUENCE ═══════ */}
-      <HeroSequence />
-      <ScrollArrow />
-
       {/* ═══════ 1-QISM — ASOSIY SARLAVHA ═══════ */}
-      <section className="relative z-20 py-[10vh] md:py-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
+      <section
+        className="relative z-20 pb-[10vh] md:pb-[50vh] px-6 md:px-12 max-w-[1400px] mx-auto"
+        style={{ paddingTop: '80px' }}
+      >
         <KineticText
           lines={["NATIJA", "BO'LMAGUNCHA", "XIZMAT", "QILAMIZ."]}
           className="mb-10"
+          autoPlay
         />
         <div className="h-[10vh] md:h-[15vh]" />
         <div className="mt-12 md:mt-16 max-w-4xl md:max-w-none mx-auto md:mx-0">
