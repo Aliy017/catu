@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { isIOS } from "./iosDetect";
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -68,6 +69,7 @@ export default function InteractiveServiceList() {
     useEffect(() => {
         if (!gridRef.current) return;
         const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+        if (isIOS()) return; // iOS: cards visible by default
 
         gsap.set(cards, { opacity: 0, y: 60, scale: 0.95 });
 

@@ -7,7 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ParticleOverlay from "@/components/ParticleOverlay";
 import KineticText from "@/components/KineticText";
-
+import { isIOS } from "@/components/iosDetect";
 import BubbleButton from "@/components/BubbleButton";
 
 
@@ -104,10 +104,59 @@ export default function Home() {
   const openContact = useCallback(() => setContactOpen(true), []);
   const closeContact = useCallback(() => setContactOpen(false), []);
 
-  /* Fade-in refs — DEFERRED to avoid blocking iOS scroll on load */
+  /* Fade-in refs — iOS uses IntersectionObserver, others use GSAP ScrollTrigger */
   const fadeRefs = useRef<(HTMLDivElement | null)[]>([]);
   const partnerGridRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    if (isIOS()) {
+      // ─── iOS: Lightweight IntersectionObserver (no GSAP scroll listeners) ───
+      const observers: IntersectionObserver[] = [];
+
+      fadeRefs.current.forEach((el) => {
+        if (!el) return;
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              el.style.opacity = '1';
+              el.style.transform = 'translateY(0)';
+              obs.disconnect();
+            }
+          });
+        }, { threshold: 0.15 });
+        obs.observe(el);
+        observers.push(obs);
+      });
+
+      if (partnerGridRef.current) {
+        const items = Array.from(partnerGridRef.current.children) as HTMLElement[];
+        items.forEach((item, i) => {
+          item.style.opacity = '0';
+          item.style.transform = 'translateY(40px) scale(0.9)';
+          item.style.transition = `opacity 0.6s ease-out ${i * 0.08}s, transform 0.6s ease-out ${i * 0.08}s`;
+        });
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              items.forEach(item => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0) scale(1)';
+              });
+              obs.disconnect();
+            }
+          });
+        }, { threshold: 0.1 });
+        obs.observe(partnerGridRef.current);
+        observers.push(obs);
+      }
+
+      return () => observers.forEach(obs => obs.disconnect());
+    }
+
+    // ─── Non-iOS: GSAP ScrollTrigger (deferred) ───
     let ctx: gsap.Context;
     const timer = setTimeout(() => {
       ctx = gsap.context(() => {
@@ -123,9 +172,9 @@ export default function Home() {
     return () => { clearTimeout(timer); ctx?.revert(); };
   }, []);
 
-  /* Partner logo stagger — DEFERRED */
+  /* Partner logo stagger — non-iOS only */
   useEffect(() => {
-    if (!partnerGridRef.current) return;
+    if (isIOS() || !partnerGridRef.current) return;
     let ctx: gsap.Context;
     const timer = setTimeout(() => {
       ctx = gsap.context(() => {
@@ -143,8 +192,9 @@ export default function Home() {
     return () => { clearTimeout(timer); ctx?.revert(); };
   }, []);
 
-  /* Final batch refresh — once after all dynamic components loaded */
+  /* Final batch refresh — non-iOS only */
   useEffect(() => {
+    if (isIOS()) return;
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 2000);

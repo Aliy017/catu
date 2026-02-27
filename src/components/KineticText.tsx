@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLowPower } from "./LowPowerContext";
+import { isIOS } from "./iosDetect";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,7 +26,7 @@ export default function KineticText({
     const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     useEffect(() => {
-        if (!containerRef.current || isLowPower || autoPlay) return;
+        if (!containerRef.current || isLowPower || autoPlay || isIOS()) return;
 
         // Only use GSAP for scroll-triggered (non-autoPlay) instances
         const ctx = gsap.context(() => {

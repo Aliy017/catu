@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { isIOS } from "./iosDetect";
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -71,7 +72,7 @@ function CinematicCard({ sector }: { sector: SectorItem }) {
     const descRef = useRef<HTMLParagraphElement>(null);
 
     useEffect(() => {
-        if (!cardRef.current || !descRef.current) return;
+        if (!cardRef.current || !descRef.current || isIOS()) return;
         const desc = descRef.current;
         const mm = gsap.matchMedia();
         mm.add("(max-width: 767px)", () => {

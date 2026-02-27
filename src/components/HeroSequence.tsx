@@ -156,7 +156,12 @@ export default function HeroSequence() {
         requestAnimationFrame(() => drawFrame(0));
         const timer = setTimeout(() => drawFrame(0), 100);
 
-        // Create a single synchronized timeline for pinning + animation
+        // ─── iOS: No GSAP ScrollTrigger — just show first frame ───
+        if (isIOS()) {
+            return () => clearTimeout(timer);
+        }
+
+        // ─── Non-iOS: Full GSAP pin + scrub timeline ───
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: containerRef.current,
@@ -169,19 +174,17 @@ export default function HeroSequence() {
             },
         });
 
-        // Add frame animation to the timeline
         tl.to(frameIndexRef.current, {
             value: FRAME_COUNT - 1,
             ease: "none",
             onUpdate: () => {
-                // Reset lastDrawn to force redraw when scrolling
                 lastDrawnRef.current = -1;
                 drawFrame(frameIndexRef.current.value);
             },
         });
 
         const handleResize = () => {
-            lastDrawnRef.current = -1; // Force redraw on resize
+            lastDrawnRef.current = -1;
             ScrollTrigger.refresh();
             drawFrame(frameIndexRef.current.value);
         };

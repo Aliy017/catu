@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
+import { isIOS } from "./iosDetect";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -254,6 +254,7 @@ export default function SpotlightResults() {
     useEffect(() => {
         if (!gridRef.current) return;
         const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+        if (isIOS()) return; // iOS: cards visible by default, no ScrollTrigger
         gsap.set(cards, { y: 60, opacity: 0, scale: 0.95 });
 
         let trigger: ScrollTrigger;
