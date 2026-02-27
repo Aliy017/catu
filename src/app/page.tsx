@@ -26,10 +26,10 @@ const ContactModal = dynamic(() => import("@/components/ContactModal"), { ssr: f
    NAVBAR — appears after hero, sticks to top
    ══════════════════════════════════════════════════════ */
 function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
-  const [isMobile, setIsMobile] = useState(false);
+  const [iosDevice, setIosDevice] = useState(false);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
+    setIosDevice(isIOS());
   }, []);
 
   const navLinks = [
@@ -42,7 +42,7 @@ function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
     <nav
       className="fixed top-0 left-0 w-full z-50"
     >
-      <div className={`border-b border-[#f5f5f5]/5 ${isMobile ? "bg-[#050505]/95" : "bg-[#050505]/85 backdrop-blur-md"}`}>
+      <div className={`border-b border-[#f5f5f5]/5 ${iosDevice ? "bg-[#050505]/95" : "bg-[#050505]/85 backdrop-blur-md"}`}>
         <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-3 md:py-4 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex-shrink-0">
