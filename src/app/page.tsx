@@ -20,6 +20,7 @@ const WhoWeWorkWith = dynamic(() => import("@/components/WhoWeWorkWith"), { ssr:
 const ContactModal = dynamic(() => import("@/components/ContactModal"), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 /* ══════════════════════════════════════════════════════
    NAVBAR — appears after hero, sticks to top
