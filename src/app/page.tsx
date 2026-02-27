@@ -147,15 +147,14 @@ export default function Home() {
 
       {/* ═══════ 1-QISM — ASOSIY SARLAVHA ═══════ */}
       <section
-        className="relative z-20 pb-[5vh] md:pb-[50vh] px-6 md:px-12 max-w-[1400px] mx-auto"
+        className="relative z-20 pb-[5vh] md:pb-[70vh] px-6 md:px-12 max-w-[1400px] mx-auto"
         style={{ paddingTop: '80px' }}
       >
         <KineticText
           lines={["NATIJA", "BO'LMAGUNCHA", "XIZMAT", "QILAMIZ."]}
-          className="mb-10"
+          className="mb-[4vh] md:mb-[15vh]"
           autoPlay
         />
-        <div className="h-[4vh] md:h-[15vh]" />
         <div className="mt-12 md:mt-16 max-w-4xl md:max-w-none mx-auto md:mx-0">
           {/* Premium subtitle block */}
           <div className="relative text-center">
@@ -171,14 +170,11 @@ export default function Home() {
                 className="font-[family-name:var(--font-body)] text-lg md:text-2xl lg:text-3xl text-[#f5f5f5]/60 font-light leading-[1.6] md:leading-[1.9] tracking-wide"
               />
             </div>
-            <div className="h-[6vh] md:h-[60vh]" />
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-[6vh] md:mt-[60vh]">
               <BubbleButton onOpen={openContact} />
             </div>
-            <div className="h-[10vh] md:h-[60vh]" />
           </div>
         </div>
-        <div className="hidden md:block md:h-[20vh]" />
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
@@ -187,12 +183,11 @@ export default function Home() {
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6 text-center">
             Biz bilan ishlagan <span className="text-[#FF2020]">hamkorlar</span>
           </h2>
-          <div className="flex justify-center w-full mb-16 md:mb-24">
+          <div className="flex justify-center w-full mb-[10vh] md:mb-[10vh]">
             <p className="font-[family-name:var(--font-body)] text-lg md:text-2xl max-w-3xl leading-relaxed text-center text-sweep-red">
               Biz turli sohalardagi bizneslar bilan <span className="font-semibold">samarali hamkorlik</span> qilganmiz.
             </p>
           </div>
-          <div className="h-[10vh]" />
           <div ref={partnerGridRef} className="grid grid-cols-2 sm:grid-cols-4 gap-x-5 gap-y-10 md:gap-x-6 md:gap-y-12">
             {partnerLogos.map((logo, i) => (
               <div key={i} className="flex flex-col items-center group">
@@ -229,7 +224,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <div style={{ marginTop: '40vh' }} className="text-center">
+        <div className="text-center mt-[20vh] md:mt-[40vh]">
           <h3 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase mb-[5vh]">
             <span className="bg-clip-text text-transparent bg-gradient-to-b from-white from-30% to-[#FF2020]">
               Biz butun O'zbekiston bo'ylab
@@ -238,8 +233,7 @@ export default function Home() {
               ishlaymiz
             </span>
           </h3>
-          <div className="hidden md:block h-[5vh]" />
-          <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/50 to-transparent" />
+          <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/50 to-transparent md:mt-[5vh]" />
         </div>
       </section>
 
@@ -247,19 +241,19 @@ export default function Home() {
       <WhoWeWorkWith />
 
       {/* ═══════ 4-QISM — BIZ ISHLAYDIGAN SOHALAR ═══════ */}
-      <section className="relative z-30 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
+      <section className="relative z-30 py-[15vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
         <div ref={(el) => { fadeRefs.current[3] = el; }} className="w-full">
-          <h2 style={{ marginBottom: '3vh' }} className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] text-center">
+          <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] text-center mb-[3vh]">
             Biz ishlaydigan <span className="text-[#FF2020]">sohalar</span>
           </h2>
-          <div style={{ marginBottom: '10vh' }} className="flex justify-center w-full">
+          <div className="flex justify-center w-full mb-[10vh]">
             <p className="font-[family-name:var(--font-body)] text-lg md:text-2xl max-w-3xl leading-relaxed text-center text-sweep-red">
               Har bir soha uchun alohida strategiya va yondashuv ishlab chiqamiz.
             </p>
           </div>
           <SectorCinematic />
         </div>
-        <div className="mt-[20vh] h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
+        <div className="mt-[10vh] md:mt-[20vh] h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
       </section>
 
 
@@ -270,10 +264,9 @@ export default function Home() {
       <div className="w-full flex justify-center py-4 md:py-8">
         <div className="w-[80%] md:w-[60%] h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, #FF2020, transparent)' }} />
       </div>
-      <div className="h-[30vh]" />
 
       {/* ═══════ 6-QISM — NATIJALAR ═══════ */}
-      <section id="results" style={{ scrollMarginTop: 100 }} className="relative z-30 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
+      <section id="results" style={{ scrollMarginTop: 100 }} className="relative z-30 pt-[15vh] md:pt-[30vh] pb-[15vh] md:pb-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
         <div ref={(el) => { fadeRefs.current[6] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-6 md:mb-8 text-center">
             <span className="text-[#FF2020]">Natijalar</span>
@@ -288,13 +281,12 @@ export default function Home() {
       </section>
 
       {/* Red divider */}
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-[20vh] md:py-[40vh]">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-[10vh] md:py-[40vh]">
         <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/50 to-transparent" />
       </div>
 
       {/* ═══════ 7-QISM — XIZMATLAR ═══════ */}
-      <div className="h-[30vh]" />
-      <section className="relative z-30 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
+      <section className="relative z-30 pt-[15vh] md:pt-[30vh] pb-[15vh] md:pb-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
         <div ref={(el) => { fadeRefs.current[7] = el; }} className="w-full">
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6 text-center">
             <span className="text-[#FF2020]">Xizmatlar</span>
@@ -308,17 +300,16 @@ export default function Home() {
             <InteractiveServiceList />
           </div>
         </div>
-        <div className="mt-[20vh] h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
+        <div className="mt-[10vh] md:mt-[20vh] h-[1px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/30 to-transparent" />
       </section>
 
       {/* ═══════ UCHRASHUV BELGILASH ═══════ */}
-      <section id="contact" style={{ scrollMarginTop: 100 }} className="relative z-30 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
+      <section id="contact" style={{ scrollMarginTop: 100 }} className="relative z-30 py-[15vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
         <div className="w-full max-w-4xl mx-auto text-center flex flex-col items-center">
           <KineticText
             lines={["HAMKORLIK UCHUN", "UCHRASHUV", "BELGILAYMIZMI?"]}
             centered
           />
-          <div style={{ height: '20px' }} />
           <p
             className="font-[family-name:var(--font-body)] text-xl md:text-3xl mt-8 md:mt-12 leading-relaxed"
             style={{ animation: 'subtitle-pulse 3s ease-in-out infinite alternate' }}
@@ -326,21 +317,14 @@ export default function Home() {
             Qisqa registratsiya qoldiring — biznesingizni tahlil qilib, aniq reja beramiz.
           </p>
 
-          {/* Spacer */}
-          <div style={{ height: '120px' }} />
-
-          <BubbleButton onOpen={openContact} />
+          <div className="mt-16 md:mt-28">
+            <BubbleButton onOpen={openContact} />
+          </div>
         </div>
       </section>
 
-      {/* Spacer between Registration and Partners */}
-      {/* Mobile spacer */}
-      <div className="block md:hidden" style={{ height: '80px' }} />
-      {/* Desktop spacer */}
-      <div className="hidden md:block" style={{ height: '400px' }} />
-
       {/* ═══════ HAMKORLARIMIZ (alohida section) ═══════ */}
-      <section className="relative z-20 py-[20vh] md:py-[30vh] flex flex-col justify-center overflow-hidden">
+      <section className="relative z-20 mt-[40px] md:mt-[400px] py-[10vh] md:py-[30vh] flex flex-col justify-center overflow-hidden">
         <div className="px-6 md:px-12 max-w-[1400px] mx-auto mb-12 md:mb-20">
           <h2 className="font-[family-name:var(--font-heading)] text-2xl md:text-4xl lg:text-5xl font-bold uppercase text-[#f5f5f5] mb-6 text-center">
             <span className="text-[#f5f5f5]">Hamkorlarimiz</span>
@@ -364,7 +348,7 @@ export default function Home() {
       </section>
 
       {/* Red divider */}
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-[20vh] md:py-[40vh]">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-[10vh] md:py-[40vh]">
         <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/50 to-transparent" />
       </div>
 
