@@ -147,7 +147,7 @@ export default function Home() {
 
       {/* ═══════ 1-QISM — ASOSIY SARLAVHA ═══════ */}
       <section
-        className="relative z-20 pb-[10vh] md:pb-[50vh] px-6 md:px-12 max-w-[1400px] mx-auto"
+        className="relative z-20 pb-[5vh] md:pb-[50vh] px-6 md:px-12 max-w-[1400px] mx-auto"
         style={{ paddingTop: '80px' }}
       >
         <KineticText
@@ -155,7 +155,7 @@ export default function Home() {
           className="mb-10"
           autoPlay
         />
-        <div className="h-[10vh] md:h-[15vh]" />
+        <div className="h-[4vh] md:h-[15vh]" />
         <div className="mt-12 md:mt-16 max-w-4xl md:max-w-none mx-auto md:mx-0">
           {/* Premium subtitle block */}
           <div className="relative text-center">
@@ -171,18 +171,18 @@ export default function Home() {
                 className="font-[family-name:var(--font-body)] text-lg md:text-2xl lg:text-3xl text-[#f5f5f5]/60 font-light leading-[1.6] md:leading-[1.9] tracking-wide"
               />
             </div>
-            <div className="h-[15vh] md:h-[60vh]" />
+            <div className="h-[6vh] md:h-[60vh]" />
             <div className="flex justify-center">
               <BubbleButton onOpen={openContact} />
             </div>
-            <div className="h-[40vh] md:h-[60vh]" />
+            <div className="h-[10vh] md:h-[60vh]" />
           </div>
         </div>
         <div className="hidden md:block md:h-[20vh]" />
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
-      <section id="partners" style={{ scrollMarginTop: 100 }} className="relative z-30 mt-[10vh] md:mt-[40vh] pt-[20vh] pb-[15vh] md:pt-[80vh] md:pb-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
+      <section id="partners" style={{ scrollMarginTop: 100 }} className="relative z-30 mt-[5vh] md:mt-[40vh] pt-[8vh] pb-[15vh] md:pt-[80vh] md:pb-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
         <div ref={(el) => { fadeRefs.current[1] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6 text-center">
             Biz bilan ishlagan <span className="text-[#FF2020]">hamkorlar</span>
