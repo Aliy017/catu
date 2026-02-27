@@ -22,11 +22,14 @@ const ContactModal = dynamic(() => import("@/components/ContactModal"), { ssr: f
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-// ─── iOS: Kill ALL GSAP scroll listeners globally ───
-// registerPlugin adds global scroll/resize listeners even without instances.
-// This removes them entirely on iOS — native scroll only.
+// ─── iOS: Kill ALL GSAP activity ───
+// 1. ScrollTrigger.disable() — removes global scroll/resize listeners
+// 2. gsap.ticker.sleep() — stops the requestAnimationFrame loop
+// Without this, GSAP's ticker runs ~60fps even with no animations,
+// consuming CPU and competing with iOS native scroll.
 if (typeof window !== 'undefined' && isIOS()) {
   ScrollTrigger.disable();
+  gsap.ticker.sleep();
 }
 
 /* ══════════════════════════════════════════════════════
