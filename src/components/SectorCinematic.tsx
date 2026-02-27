@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isIOS } from "./iosDetect";
 
 
-gsap.registerPlugin(ScrollTrigger);
+// ScrollTrigger registered inside useEffect (non-iOS only)
 
 interface SectorItem {
     id: string;

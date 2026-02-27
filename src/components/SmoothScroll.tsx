@@ -8,7 +8,7 @@ import { useLowPower } from "./LowPowerContext";
 import { isIOS } from "./iosDetect";
 
 
-gsap.registerPlugin(ScrollTrigger);
+// ScrollTrigger registered inside useEffect (non-iOS only)
 
 interface SmoothScrollProps {
     children: ReactNode;

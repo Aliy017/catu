@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isIOS } from "./iosDetect";
 
-gsap.registerPlugin(ScrollTrigger);
+// ScrollTrigger registered inside useEffect (non-iOS only)
 
 /*
   Step labels + their FINAL resting positions.

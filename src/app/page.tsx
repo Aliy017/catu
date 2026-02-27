@@ -19,8 +19,8 @@ const SectorCinematic = dynamic(() => import("@/components/SectorCinematic"), { 
 const WhoWeWorkWith = dynamic(() => import("@/components/WhoWeWorkWith"), { ssr: false });
 const ContactModal = dynamic(() => import("@/components/ContactModal"), { ssr: false });
 
-gsap.registerPlugin(ScrollTrigger);
-ScrollTrigger.config({ ignoreMobileResize: true });
+// NOTE: gsap.registerPlugin(ScrollTrigger) is called INSIDE useEffect only for non-iOS
+// This prevents iOS from getting global scroll/resize listeners
 
 /* ══════════════════════════════════════════════════════
    NAVBAR — appears after hero, sticks to top
@@ -157,6 +157,8 @@ export default function Home() {
     }
 
     // ─── Non-iOS: GSAP ScrollTrigger (deferred) ───
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
     let ctx: gsap.Context;
     const timer = setTimeout(() => {
       ctx = gsap.context(() => {

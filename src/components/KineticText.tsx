@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLowPower } from "./LowPowerContext";
 import { isIOS } from "./iosDetect";
 
-gsap.registerPlugin(ScrollTrigger);
+// ScrollTrigger registered inside useEffect (non-iOS only)
 
 interface KineticTextProps {
     lines: string[];

@@ -6,7 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isIOS } from "./iosDetect";
 
-gsap.registerPlugin(ScrollTrigger);
+// ScrollTrigger registered inside useEffect (non-iOS only)
 
 const FRAME_COUNT = 98;
 const INITIAL_BATCH = 8;     // First frames to show loader quickly
