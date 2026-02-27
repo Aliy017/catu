@@ -197,8 +197,10 @@ export default function HeroSequence() {
         };
     }, [loaded, drawFrame]);
 
+    const iosDevice = typeof window !== 'undefined' && isIOS();
+
     return (
-        <div ref={containerRef} className="relative" style={{ height: "200vh" }}>
+        <div ref={containerRef} className="relative" style={{ height: iosDevice ? "100vh" : "200vh" }}>
             {/* ═══════ LUXURY PREMIUM LOADING SCREEN ═══════ */}
             <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050505]
                 transition-all duration-[1500ms] ease-[cubic-bezier(0.19,1,0.22,1)]
@@ -297,7 +299,7 @@ export default function HeroSequence() {
                 {/* Canvas */}
                 <canvas
                     ref={canvasRef}
-                    className="absolute inset-0 w-full h-full"
+                    className="absolute inset-0 w-full h-full pointer-events-none"
                     style={{ imageRendering: "crisp-edges" }}
                 />
 
