@@ -71,23 +71,26 @@ export default function InteractiveServiceList() {
 
         gsap.set(cards, { opacity: 0, y: 60, scale: 0.95 });
 
-        const trigger = ScrollTrigger.create({
-            trigger: gridRef.current,
-            start: "top 85%",
-            onEnter: () => {
-                gsap.to(cards, {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    duration: 0.8,
-                    stagger: 0.15,
-                    ease: "power3.out",
-                });
-            },
-            once: true,
-        });
+        let trigger: ScrollTrigger;
+        const timer = setTimeout(() => {
+            trigger = ScrollTrigger.create({
+                trigger: gridRef.current,
+                start: "top 85%",
+                onEnter: () => {
+                    gsap.to(cards, {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 0.8,
+                        stagger: 0.15,
+                        ease: "power3.out",
+                    });
+                },
+                once: true,
+            });
+        }, 500);
 
-        return () => trigger.kill();
+        return () => { clearTimeout(timer); trigger?.kill(); };
     }, []);
 
     return (

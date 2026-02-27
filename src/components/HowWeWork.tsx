@@ -28,40 +28,43 @@ export default function HowWeWork() {
     useEffect(() => {
         if (!sectionRef.current) return;
 
-        const ctx = gsap.context(() => {
-            // Master timeline — pinned section, scrub-driven
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top top",
-                    end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=100%" : "+=150%",
-                    pin: true,
-                    scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.3 : 1.2,
-                    anticipatePin: 1,
-                },
-            });
-
-            // Each step drifts in from the right, staggered
-            stepsRef.current.forEach((el, i) => {
-                if (!el) return;
-                tl.fromTo(
-                    el,
-                    { xPercent: 200, opacity: 0 },
-                    {
-                        xPercent: 0,
-                        opacity: 1,
-                        duration: 1,
-                        ease: "power3.out",
+        let ctx: gsap.Context;
+        const timer = setTimeout(() => {
+            ctx = gsap.context(() => {
+                // Master timeline — pinned section, scrub-driven
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: "top top",
+                        end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=100%" : "+=150%",
+                        pin: true,
+                        scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.3 : 1.2,
+                        anticipatePin: 1,
                     },
-                    i * 0.4 // stagger offset
-                );
-            });
+                });
 
-            // Hold briefly at the end so all labels are visible together
-            tl.to({}, { duration: 0.6 });
-        }, sectionRef);
+                // Each step drifts in from the right, staggered
+                stepsRef.current.forEach((el, i) => {
+                    if (!el) return;
+                    tl.fromTo(
+                        el,
+                        { xPercent: 200, opacity: 0 },
+                        {
+                            xPercent: 0,
+                            opacity: 1,
+                            duration: 1,
+                            ease: "power3.out",
+                        },
+                        i * 0.4 // stagger offset
+                    );
+                });
 
-        return () => ctx.revert();
+                // Hold briefly at the end so all labels are visible together
+                tl.to({}, { duration: 0.6 });
+            }, sectionRef);
+        }, 500);
+
+        return () => { clearTimeout(timer); ctx?.revert(); };
     }, []);
 
     return (

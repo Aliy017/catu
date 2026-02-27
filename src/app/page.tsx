@@ -104,37 +104,51 @@ export default function Home() {
   const openContact = useCallback(() => setContactOpen(true), []);
   const closeContact = useCallback(() => setContactOpen(false), []);
 
-  /* Fade-in refs */
+  /* Fade-in refs — DEFERRED to avoid blocking iOS scroll on load */
   const fadeRefs = useRef<(HTMLDivElement | null)[]>([]);
   const partnerGridRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      fadeRefs.current.forEach((el) => {
-        if (!el) return;
-        gsap.fromTo(el, { yPercent: 15, opacity: 0 }, {
-          yPercent: 0, opacity: 1, duration: 1, ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+    let ctx: gsap.Context;
+    const timer = setTimeout(() => {
+      ctx = gsap.context(() => {
+        fadeRefs.current.forEach((el) => {
+          if (!el) return;
+          gsap.fromTo(el, { yPercent: 15, opacity: 0 }, {
+            yPercent: 0, opacity: 1, duration: 1, ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+          });
         });
       });
-    });
-    return () => ctx.revert();
+    }, 300);
+    return () => { clearTimeout(timer); ctx?.revert(); };
   }, []);
 
-  /* Partner logo stagger animation */
+  /* Partner logo stagger — DEFERRED */
   useEffect(() => {
     if (!partnerGridRef.current) return;
-    const ctx = gsap.context(() => {
-      const items = partnerGridRef.current!.children;
-      gsap.fromTo(items,
-        { y: 60, scale: 0.5, opacity: 0 },
-        {
-          y: 0, scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.4)",
-          stagger: 0.1,
-          scrollTrigger: { trigger: partnerGridRef.current, start: "top 85%", toggleActions: "play none none none" },
-        }
-      );
-    });
-    return () => ctx.revert();
+    let ctx: gsap.Context;
+    const timer = setTimeout(() => {
+      ctx = gsap.context(() => {
+        const items = partnerGridRef.current!.children;
+        gsap.fromTo(items,
+          { y: 60, scale: 0.5, opacity: 0 },
+          {
+            y: 0, scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.4)",
+            stagger: 0.1,
+            scrollTrigger: { trigger: partnerGridRef.current, start: "top 85%", toggleActions: "play none none none" },
+          }
+        );
+      });
+    }, 300);
+    return () => { clearTimeout(timer); ctx?.revert(); };
+  }, []);
+
+  /* Final batch refresh — once after all dynamic components loaded */
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 2000);
+    return () => clearTimeout(timer);
   }, []);
 
 

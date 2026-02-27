@@ -41,161 +41,164 @@ export default function WhoWeWorkWith() {
     useEffect(() => {
         if (!sectionRef.current) return;
 
-        const ctx = gsap.context(() => {
+        let ctx: gsap.Context;
+        const timer = setTimeout(() => {
+            ctx = gsap.context(() => {
 
-            // Set initial states immediately (before any scroll)
-            gsap.set(titleWorkRef.current, { y: "100vh", opacity: 0, scale: 0.7 });
+                // Set initial states immediately (before any scroll)
+                gsap.set(titleWorkRef.current, { y: "100vh", opacity: 0, scale: 0.7 });
 
-            gsap.set(glowRef.current, { opacity: 0, scale: 0.3 });
-            gsap.set(titleDontRef.current, { y: 60, opacity: 0, scale: 0.9 });
+                gsap.set(glowRef.current, { opacity: 0, scale: 0.3 });
+                gsap.set(titleDontRef.current, { y: 60, opacity: 0, scale: 0.9 });
 
-            if (listWorkRef.current) {
-                gsap.set(listWorkRef.current.children, { y: 50, opacity: 0 });
-            }
-            if (listDontRef.current) {
-                gsap.set(listDontRef.current.children, { y: 50, opacity: 0 });
-                gsap.set(listDontRef.current, { visibility: "hidden" });
-            }
+                if (listWorkRef.current) {
+                    gsap.set(listWorkRef.current.children, { y: 50, opacity: 0 });
+                }
+                if (listDontRef.current) {
+                    gsap.set(listDontRef.current.children, { y: 50, opacity: 0 });
+                    gsap.set(listDontRef.current, { visibility: "hidden" });
+                }
 
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top top",
-                    end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=150%" : "+=350%",
-                    pin: true,
-                    scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.3 : 1,
-                    anticipatePin: 1,
-                },
-            });
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: "top top",
+                        end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=150%" : "+=350%",
+                        pin: true,
+                        scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.3 : 1,
+                        anticipatePin: 1,
+                    },
+                });
 
-            /* ═══════════════════════════════════════════
-               PHASE 1: Title rises from bottom of viewport
-               ═══════════════════════════════════════════ */
-            // Title slides UP from bottom of screen → center
-            tl.to(
-                titleWorkRef.current,
-                {
-                    y: 0,
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "power3.out",
-                },
-                0
-            );
-
-            // Red glow fades in behind
-            tl.to(
-                glowRef.current,
-                { opacity: 0.2, scale: 1, duration: 2, ease: "power2.out" },
-                0.5
-            );
-
-
-
-            /* ═══════════════════════════════════════════
-               PHASE 2: List items stagger in one by one
-               ═══════════════════════════════════════════ */
-            if (listWorkRef.current) {
+                /* ═══════════════════════════════════════════
+                   PHASE 1: Title rises from bottom of viewport
+                   ═══════════════════════════════════════════ */
+                // Title slides UP from bottom of screen → center
                 tl.to(
-                    listWorkRef.current.children,
+                    titleWorkRef.current,
                     {
                         y: 0,
                         opacity: 1,
-                        duration: 0.6,
-                        stagger: 0.2,
+                        scale: 1,
+                        duration: 2,
                         ease: "power3.out",
                     },
-                    2.5
+                    0
                 );
-            }
 
-            /* ═══════════════════════════════════════════
-               PAUSE — hold for reading
-               ═══════════════════════════════════════════ */
-            tl.to({}, { duration: 2 }, 4.5);
-
-            /* ═══════════════════════════════════════════
-               PHASE 3: Cross-fade to "ishlamaymiz"
-               ═══════════════════════════════════════════ */
-            // Fade out + slide up ishlaymiz title
-            tl.to(
-                titleWorkRef.current,
-                { y: -80, opacity: 0, duration: 1.2, ease: "power2.in" },
-                6.5
-            );
-            // Fade out list items (fast stagger)
-            if (listWorkRef.current) {
+                // Red glow fades in behind
                 tl.to(
-                    listWorkRef.current.children,
-                    { y: -30, opacity: 0, stagger: 0.06, duration: 0.4, ease: "power2.in" },
+                    glowRef.current,
+                    { opacity: 0.2, scale: 1, duration: 2, ease: "power2.out" },
+                    0.5
+                );
+
+
+
+                /* ═══════════════════════════════════════════
+                   PHASE 2: List items stagger in one by one
+                   ═══════════════════════════════════════════ */
+                if (listWorkRef.current) {
+                    tl.to(
+                        listWorkRef.current.children,
+                        {
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.6,
+                            stagger: 0.2,
+                            ease: "power3.out",
+                        },
+                        2.5
+                    );
+                }
+
+                /* ═══════════════════════════════════════════
+                   PAUSE — hold for reading
+                   ═══════════════════════════════════════════ */
+                tl.to({}, { duration: 2 }, 4.5);
+
+                /* ═══════════════════════════════════════════
+                   PHASE 3: Cross-fade to "ishlamaymiz"
+                   ═══════════════════════════════════════════ */
+                // Fade out + slide up ishlaymiz title
+                tl.to(
+                    titleWorkRef.current,
+                    { y: -80, opacity: 0, duration: 1.2, ease: "power2.in" },
                     6.5
                 );
-            }
+                // Fade out list items (fast stagger)
+                if (listWorkRef.current) {
+                    tl.to(
+                        listWorkRef.current.children,
+                        { y: -30, opacity: 0, stagger: 0.06, duration: 0.4, ease: "power2.in" },
+                        6.5
+                    );
+                }
 
-            // Glow dims and shifts color feel
-            tl.to(
-                glowRef.current,
-                { opacity: 0.06, duration: 1 },
-                7
-            );
-
-
-
-            // Show ishlamaymiz list container
-            tl.set(listDontRef.current, { visibility: "visible" }, 7.5);
-
-            // Fade in ishlamaymiz title from below
-            tl.to(
-                titleDontRef.current,
-                { y: 0, opacity: 1, scale: 1, duration: 1.5, ease: "power3.out" },
-                7.5
-            );
-
-            // Stagger in ishlamaymiz list items
-            if (listDontRef.current) {
+                // Glow dims and shifts color feel
                 tl.to(
-                    listDontRef.current.children,
-                    {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.6,
-                        stagger: 0.2,
-                        ease: "power3.out",
-                    },
-                    8.2
+                    glowRef.current,
+                    { opacity: 0.06, duration: 1 },
+                    7
                 );
-            }
 
-            /* ═══════════════════════════════════════════
-               PAUSE — hold for reading
-               ═══════════════════════════════════════════ */
-            tl.to({}, { duration: 2 }, 10);
 
-            /* ═══════════════════════════════════════════
-               PHASE 4: Everything fades out
-               ═══════════════════════════════════════════ */
-            tl.to(
-                titleDontRef.current,
-                { y: -60, opacity: 0, duration: 1, ease: "power2.in" },
-                12
-            );
-            if (listDontRef.current) {
+
+                // Show ishlamaymiz list container
+                tl.set(listDontRef.current, { visibility: "visible" }, 7.5);
+
+                // Fade in ishlamaymiz title from below
                 tl.to(
-                    listDontRef.current.children,
-                    { opacity: 0, y: -20, stagger: 0.04, duration: 0.4, ease: "power2.in" },
+                    titleDontRef.current,
+                    { y: 0, opacity: 1, scale: 1, duration: 1.5, ease: "power3.out" },
+                    7.5
+                );
+
+                // Stagger in ishlamaymiz list items
+                if (listDontRef.current) {
+                    tl.to(
+                        listDontRef.current.children,
+                        {
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.6,
+                            stagger: 0.2,
+                            ease: "power3.out",
+                        },
+                        8.2
+                    );
+                }
+
+                /* ═══════════════════════════════════════════
+                   PAUSE — hold for reading
+                   ═══════════════════════════════════════════ */
+                tl.to({}, { duration: 2 }, 10);
+
+                /* ═══════════════════════════════════════════
+                   PHASE 4: Everything fades out
+                   ═══════════════════════════════════════════ */
+                tl.to(
+                    titleDontRef.current,
+                    { y: -60, opacity: 0, duration: 1, ease: "power2.in" },
                     12
                 );
-            }
-            tl.to(
-                glowRef.current,
-                { opacity: 0, duration: 1 },
-                12.2
-            );
+                if (listDontRef.current) {
+                    tl.to(
+                        listDontRef.current.children,
+                        { opacity: 0, y: -20, stagger: 0.04, duration: 0.4, ease: "power2.in" },
+                        12
+                    );
+                }
+                tl.to(
+                    glowRef.current,
+                    { opacity: 0, duration: 1 },
+                    12.2
+                );
 
-        }, sectionRef);
+            }, sectionRef);
+        }, 500);
 
-        return () => ctx.revert();
+        return () => { clearTimeout(timer); ctx?.revert(); };
     }, []);
 
     return (
