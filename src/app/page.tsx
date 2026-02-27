@@ -184,7 +184,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
-      <section id="partners" style={{ scrollMarginTop: 100 }} className="relative z-20 mt-[10vh] md:mt-[40vh] pt-[20vh] pb-[15vh] md:pt-[80vh] md:pb-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
+      <section id="partners" style={{ scrollMarginTop: 100 }} className="relative z-30 mt-[10vh] md:mt-[40vh] pt-[20vh] pb-[15vh] md:pt-[80vh] md:pb-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
         <div ref={(el) => { fadeRefs.current[1] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6 text-center">
             Biz bilan ishlagan <span className="text-[#FF2020]">hamkorlar</span>
@@ -249,7 +249,7 @@ export default function Home() {
       <WhoWeWorkWith />
 
       {/* ═══════ 4-QISM — BIZ ISHLAYDIGAN SOHALAR ═══════ */}
-      <section className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto">
+      <section className="relative z-30 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
         <div ref={(el) => { fadeRefs.current[3] = el; }} className="w-full">
           <h2 style={{ marginBottom: '3vh' }} className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] text-center">
             Biz ishlaydigan <span className="text-[#FF2020]">sohalar</span>
@@ -275,7 +275,7 @@ export default function Home() {
       <div className="h-[30vh]" />
 
       {/* ═══════ 6-QISM — NATIJALAR ═══════ */}
-      <section id="results" style={{ scrollMarginTop: 100 }} className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto">
+      <section id="results" style={{ scrollMarginTop: 100 }} className="relative z-30 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
         <div ref={(el) => { fadeRefs.current[6] = el; }}>
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-6 md:mb-8 text-center">
             <span className="text-[#FF2020]">Natijalar</span>
@@ -296,7 +296,7 @@ export default function Home() {
 
       {/* ═══════ 7-QISM — XIZMATLAR ═══════ */}
       <div className="h-[30vh]" />
-      <section className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto">
+      <section className="relative z-30 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
         <div ref={(el) => { fadeRefs.current[7] = el; }} className="w-full">
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-5xl lg:text-7xl font-bold uppercase text-[#f5f5f5] mb-4 md:mb-6 text-center">
             <span className="text-[#FF2020]">Xizmatlar</span>
@@ -314,8 +314,8 @@ export default function Home() {
       </section>
 
       {/* ═══════ UCHRASHUV BELGILASH ═══════ */}
-      <section id="contact" style={{ scrollMarginTop: 100 }} className="relative z-20 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto">
-        <div ref={(el) => { fadeRefs.current[8] = el; }} className="w-full max-w-4xl mx-auto text-center flex flex-col items-center">
+      <section id="contact" style={{ scrollMarginTop: 100 }} className="relative z-30 py-[30vh] md:py-[50vh] min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto bg-[#050505]">
+        <div className="w-full max-w-4xl mx-auto text-center flex flex-col items-center">
           <KineticText
             lines={["HAMKORLIK UCHUN", "UCHRASHUV", "BELGILAYMIZMI?"]}
             centered

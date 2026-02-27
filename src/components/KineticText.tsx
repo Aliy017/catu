@@ -33,13 +33,13 @@ export default function KineticText({
 
             gsap.fromTo(
                 inners,
-                { yPercent: 30, opacity: 0 },
+                { yPercent: 100, opacity: 0 },
                 {
                     yPercent: 0,
                     opacity: 1,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    stagger: 0.08,
+                    duration: 1,
+                    ease: "power4.out",
+                    stagger: 0.1,
                     scrollTrigger: {
                         trigger: containerRef.current,
                         start: "top 85%",
@@ -72,7 +72,7 @@ export default function KineticText({
                                     ? {
                                         animation: `kinetic-rise 0.7s cubic-bezier(0.22,1,0.36,1) ${index * 0.08}s both`,
                                     }
-                                    : { opacity: 0, transform: 'translateY(30%)' }
+                                    : { opacity: 0, transform: 'translateY(100%)' }
                         }
                     >
                         {line}
