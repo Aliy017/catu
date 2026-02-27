@@ -74,6 +74,62 @@ function useProgressivePreloader(frameCount: number) {
 }
 
 export default function HeroSequence() {
+    // ─── iOS: Simple static image — no canvas, no 98 image preload ───
+    if (typeof window !== 'undefined' && isIOS()) {
+        return <IOSHeroFallback />;
+    }
+
+    return <DesktopHero />;
+}
+
+/** iOS: Lightweight hero — single image, no canvas, no GSAP */
+function IOSHeroFallback() {
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        const img = new Image();
+        img.src = getFramePath(1);
+        img.onload = () => setTimeout(() => setLoaded(true), 500);
+        img.onerror = () => setTimeout(() => setLoaded(true), 500);
+    }, []);
+
+    return (
+        <div className="relative" style={{ height: "100vh" }}>
+            {/* Loading screen */}
+            <div className={`fixed inset-0 z-[100] flex items-center justify-center bg-[#050505]
+                transition-opacity duration-1000
+                ${loaded ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
+                <span className="font-[family-name:var(--font-heading)] text-[9px] tracking-[0.3em] text-white/30 uppercase">
+                    YUKLANMOQDA
+                </span>
+            </div>
+
+            {/* Static first frame as background */}
+            <div className="w-full h-screen relative">
+                <NextImage
+                    src={getFramePath(1)}
+                    alt="Pi MEDIA Hero"
+                    fill
+                    className="object-cover"
+                    priority
+                />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 z-10 pointer-events-none">
+                    <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#050505] to-transparent" />
+                    <div className="absolute left-0 w-full px-6 md:px-16 z-20 flex flex-col items-start gap-4"
+                        style={{ bottom: "clamp(48px, 8vh, 80px)" }}>
+                        <span className="font-[family-name:var(--font-heading)] text-[#f5f5f5]/40 text-xs sm:text-sm md:text-lg font-medium tracking-[0.15em] uppercase">
+                            IJTIMOIY TARMOQ MUTAXASSISI
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/** Desktop/Android: Full canvas + GSAP ScrollTrigger */
+function DesktopHero() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
