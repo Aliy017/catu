@@ -237,39 +237,43 @@ export default function Home() {
           </div>
           <div className="h-[10vh]" />
           <div ref={partnerGridRef} className="grid grid-cols-2 sm:grid-cols-4 gap-x-5 gap-y-10 md:gap-x-6 md:gap-y-12">
-            {partnerLogos.map((logo, i) => (
-              <div key={i} className="flex flex-col items-center group">
-                {/* Red blur glow behind logo */}
-                <div className="relative">
-                  <div className="absolute inset-0 rounded-full bg-[#FF2020]/25 blur-[20px] scale-105
-                                  group-hover:bg-[#FF2020]/50 group-hover:blur-[30px] group-hover:scale-115
-                                  transition-all duration-700 ease-out" />
-                  <div
-                    className={`relative w-20 h-20 md:w-28 md:h-28 rounded-full border border-[#FF2020]/40 ${logo.bg}
+            {partnerLogos.map((logo, i) => {
+              const ios = typeof window !== 'undefined' && isIOS();
+              return (
+                <div key={i} className="flex flex-col items-center group">
+                  <div className="relative">
+                    {/* Blur glow — skip on iOS (GPU heavy) */}
+                    {!ios && (
+                      <div className="absolute inset-0 rounded-full bg-[#FF2020]/25 blur-[20px] scale-105
+                                    group-hover:bg-[#FF2020]/50 group-hover:blur-[30px] group-hover:scale-115
+                                    transition-all duration-700 ease-out" />
+                    )}
+                    <div
+                      className={`relative w-20 h-20 md:w-28 md:h-28 rounded-full border ${ios ? 'border-[#FF2020]/30' : 'border-[#FF2020]/40'} ${logo.bg}
                                 overflow-hidden
-                                group-hover:border-[#FF2020]/70
-                                shadow-[0_0_15px_rgba(255,32,32,0.25)]
-                                group-hover:shadow-[0_0_40px_rgba(255,32,32,0.4)] transition-all duration-500`}
-                    style={{ clipPath: 'circle(50%)' }}
-                  >
-                    <div className={`absolute ${logo.cover ? 'inset-0' : 'inset-2 md:inset-3'}`}>
-                      <Image
-                        src={logo.src}
-                        alt={logo.alt}
-                        fill
-                        sizes="(max-width: 768px) 80px, 112px"
-                        className={`${logo.cover ? 'object-cover' : 'object-contain'} ${logo.scale || ''}`}
-                      />
+                                ${ios ? '' : 'group-hover:border-[#FF2020]/70 shadow-[0_0_15px_rgba(255,32,32,0.25)] group-hover:shadow-[0_0_40px_rgba(255,32,32,0.4)]'}
+                                transition-all duration-500`}
+                      style={ios ? undefined : { clipPath: 'circle(50%)' }}
+                    >
+                      <div className={`absolute ${logo.cover ? 'inset-0' : 'inset-2 md:inset-3'}`}>
+                        <Image
+                          src={logo.src}
+                          alt={logo.alt}
+                          fill
+                          sizes="(max-width: 768px) 80px, 112px"
+                          className={`${logo.cover ? 'object-cover' : 'object-contain'} ${logo.scale || ''}`}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <span style={{ marginTop: 12 }} className="font-[family-name:var(--font-heading)] text-[10px] md:text-sm font-semibold uppercase tracking-wider text-[#f5f5f5]/60
+                  <span style={{ marginTop: 12 }} className="font-[family-name:var(--font-heading)] text-[10px] md:text-sm font-semibold uppercase tracking-wider text-[#f5f5f5]/60
                                   text-center whitespace-normal leading-tight max-w-[90px] md:max-w-[120px]">
-                  {logo.alt}
-                </span>
-                <div className="mt-1.5 h-[2px] w-14 md:w-24 bg-gradient-to-r from-transparent via-[#FF2020]/60 to-transparent rounded-full" />
-              </div>
-            ))}
+                    {logo.alt}
+                  </span>
+                  <div className="mt-1.5 h-[2px] w-14 md:w-24 bg-gradient-to-r from-transparent via-[#FF2020]/60 to-transparent rounded-full" />
+                </div>
+              );
+            })}
           </div>
         </div>
         <div style={{ marginTop: '40vh' }} className="text-center">
