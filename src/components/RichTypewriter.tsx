@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLowPower } from "./LowPowerContext";
@@ -26,61 +26,53 @@ export default function RichTypewriter({
     className = "",
 }: RichTypewriterProps) {
     const { isLowPower } = useLowPower();
-    const [displayedSegments, setDisplayedSegments] = useState<TextSegment[]>([]);
-    const [typingDone, setTypingDone] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const hasStarted = useRef(false);
 
-    const totalChars = segments.reduce((acc, seg) => acc + seg.text.length, 0);
-
-    useEffect(() => {
-        // LOW POWER → show full text immediately
-        if (isLowPower) {
-            setDisplayedSegments(segments);
-            setTypingDone(true);
-            return;
-        }
-
-        if (!containerRef.current) return;
-
-        // If typing already completed, don't restart
-        if (hasStarted.current) return;
-
-        const updateText = (count: number) => {
-            let remaining = count;
-            const newSegments: TextSegment[] = [];
-
-            for (const segment of segments) {
-                if (remaining <= 0) break;
-
-                if (remaining >= segment.text.length) {
-                    newSegments.push(segment);
-                    remaining -= segment.text.length;
-                } else {
-                    newSegments.push({
-                        ...segment,
-                        text: segment.text.substring(0, remaining),
-                    });
-                    remaining = 0;
-                }
+    // Pre-build flat character array with segment info
+    const chars = useMemo(() => {
+        const result: { char: string; segIndex: number }[] = [];
+        segments.forEach((seg, si) => {
+            for (const ch of seg.text) {
+                result.push({ char: ch, segIndex: si });
             }
-            setDisplayedSegments(newSegments);
-        };
+        });
+        return result;
+    }, [segments]);
+
+    // Render all spans up front (hidden), then reveal via DOM — NO setState
+    useEffect(() => {
+        if (!containerRef.current || isLowPower) return;
+
+        const spans = containerRef.current.querySelectorAll<HTMLSpanElement>(".tw-char");
+        const cursor = containerRef.current.querySelector<HTMLSpanElement>(".tw-cursor");
+
+        if (!spans.length) return;
+
+        // Hide all chars initially
+        spans.forEach(s => { s.style.opacity = "0"; });
 
         const startTyping = () => {
             const progress = { val: 0 };
 
             gsap.to(progress, {
-                val: totalChars,
+                val: spans.length,
                 duration: speed,
                 delay: delay,
                 ease: "none",
                 onUpdate: () => {
-                    const currentCount = Math.floor(progress.val);
-                    updateText(currentCount);
+                    const count = Math.floor(progress.val);
+                    // Only reveal newly visible chars (no re-render)
+                    for (let i = 0; i < count; i++) {
+                        if (spans[i].style.opacity === "0") {
+                            spans[i].style.opacity = "1";
+                        }
+                    }
                 },
                 onComplete: () => {
-                    setTypingDone(true);
+                    // Show all remaining and hide cursor
+                    spans.forEach(s => { s.style.opacity = "1"; });
+                    if (cursor) cursor.style.display = "none";
                 },
             });
         };
@@ -99,23 +91,36 @@ export default function RichTypewriter({
         }, containerRef);
 
         return () => ctx.revert();
-    }, [segments, totalChars, speed, delay, isLowPower]);
+    }, [chars, speed, delay, isLowPower]);
+
+    // LOW POWER — show all text immediately
+    if (isLowPower) {
+        return (
+            <div ref={containerRef} className={className}>
+                {segments.map((seg, i) => (
+                    <span key={i} className={seg.className}>{seg.text}</span>
+                ))}
+            </div>
+        );
+    }
 
     return (
         <div ref={containerRef} className={className}>
-            <span className="inline transition-all duration-300 ease-out">
-                {displayedSegments.map((seg, i) => (
-                    <span key={i} className={seg.className}>
-                        {seg.text}
+            <span className="inline">
+                {chars.map((c, i) => (
+                    <span
+                        key={i}
+                        className={`tw-char ${segments[c.segIndex].className || ""}`}
+                        style={{ opacity: 0, transition: "none" }}
+                    >
+                        {c.char}
                     </span>
                 ))}
             </span>
-            {!typingDone && (
-                <span
-                    className="inline-block w-[2px] h-[0.85em] bg-[#FF2020] ml-1 align-middle rounded-full"
-                    style={{ animation: "cursorBlink 0.8s ease-in-out infinite" }}
-                />
-            )}
+            <span
+                className="tw-cursor inline-block w-[2px] h-[0.85em] bg-[#FF2020] ml-1 align-middle rounded-full"
+                style={{ animation: "cursorBlink 0.8s ease-in-out infinite" }}
+            />
         </div>
     );
 }
