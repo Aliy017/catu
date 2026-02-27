@@ -7,7 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ParticleOverlay from "@/components/ParticleOverlay";
 import KineticText from "@/components/KineticText";
-import RichTypewriter from "@/components/RichTypewriter";
+
 import BubbleButton from "@/components/BubbleButton";
 
 
@@ -156,26 +156,6 @@ export default function Home() {
           className="mb-[4vh] md:mb-[15vh]"
           autoPlay
         />
-        <div className="mt-12 md:mt-16 max-w-4xl md:max-w-none mx-auto md:mx-0">
-          {/* Premium subtitle block */}
-          <div className="relative text-center">
-            <div className="min-h-[80px] md:min-h-[100px]">
-              <RichTypewriter
-                segments={[
-                  { text: "Bizneslarni", className: "text-[#f5f5f5] font-semibold" },
-                  { text: " ijtimoiy tarmoqlarda ", className: "" },
-                  { text: "sotuvlarini barqaror o'sishiga", className: "subtitle-gradient font-semibold" },
-                  { text: " yordam beramiz.", className: "" },
-                ]}
-                speed={2}
-                className="font-[family-name:var(--font-body)] text-lg md:text-2xl lg:text-3xl text-[#f5f5f5]/60 font-light leading-[1.6] md:leading-[1.9] tracking-wide"
-              />
-            </div>
-            <div className="flex justify-center mt-[6vh] md:mt-[60vh]">
-              <BubbleButton onOpen={openContact} />
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
