@@ -67,7 +67,7 @@ export default function KineticText({
                                      font-bold uppercase leading-[1.15] tracking-tight
                                      ${centered ? 'text-center w-full mx-auto' : 'text-center md:text-left'}`}
                         style={
-                            isLowPower || isIOS()
+                            isLowPower
                                 ? { opacity: 1, transform: 'none' }
                                 : autoPlay
                                     ? {

@@ -210,25 +210,6 @@ body {
   animation-play-state: paused;
 }
 
-/* Disable ALL infinite animations on touch devices — prevents GPU jank during scroll */
-@media (hover: none) and (pointer: coarse) {
-
-  .animate-nav-marquee,
-  .nav-link-shimmer::after,
-  .text-sweep-red,
-  .scroll-arrow-bounce,
-  .logo-glow-container,
-  .logo-breathe {
-    animation: none !important;
-    will-change: auto !important;
-  }
-
-  /* Also disable subtitle shimmer */
-  .subtitle-gradient::after {
-    animation: none !important;
-  }
-}
-
 /* ── Bubble floating animations ── */
 @keyframes bubble-drift-0 {
 
