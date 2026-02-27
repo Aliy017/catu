@@ -37,7 +37,6 @@ html {
   scroll-behavior: auto;
   overflow-x: hidden;
   background-color: #050505;
-  overscroll-behavior-y: none;
 }
 
 body {
@@ -47,7 +46,6 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: none;
 }
 
 ::selection {
