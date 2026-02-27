@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { isIOS } from "./iosDetect";
+
 
 gsap.registerPlugin(ScrollTrigger);
 

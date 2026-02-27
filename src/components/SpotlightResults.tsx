@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { isIOS } from "./iosDetect";
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -163,7 +163,7 @@ function ExpandedModal({ item, onClose }: { item: PortfolioItem; onClose: () => 
             style={{ opacity: 0, perspective: "1200px" }}
         >
             {/* Backdrop */}
-            <div className={`absolute inset-0 ${isIOS() ? 'bg-black/95' : 'bg-black/90 backdrop-blur-2xl'}`} />
+            <div className="absolute inset-0 bg-black/90 backdrop-blur-2xl" />
 
             {/* Animated gradient border */}
             <div
@@ -399,7 +399,7 @@ const PortfolioCard = React.forwardRef<HTMLDivElement, {
                     {/* Category tag — bottom-left */}
                     <div className="absolute bottom-2 left-2 md:bottom-3 md:left-3 z-[4]">
                         <span
-                            className={`inline-block px-2 py-0.5 md:px-3 md:py-1 text-[8px] md:text-[10px] uppercase tracking-widest font-bold rounded-md border ${isIOS() ? '' : 'backdrop-blur-sm'}`}
+                            className="inline-block px-2 py-0.5 md:px-3 md:py-1 text-[8px] md:text-[10px] uppercase tracking-widest font-bold rounded-md border backdrop-blur-sm"
                             style={{
                                 borderColor: `${item.accent}40`,
                                 background: `${item.accent}15`,

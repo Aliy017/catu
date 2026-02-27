@@ -9,7 +9,7 @@ import ParticleOverlay from "@/components/ParticleOverlay";
 import KineticText from "@/components/KineticText";
 import RichTypewriter from "@/components/RichTypewriter";
 import BubbleButton from "@/components/BubbleButton";
-import { isIOS } from "@/components/iosDetect";
+
 
 // ⚡ Dynamic imports — below-fold heavy components (lazy load for speed)
 const HowWeWork = dynamic(() => import("@/components/HowWeWork"), { ssr: false });
@@ -25,11 +25,9 @@ gsap.registerPlugin(ScrollTrigger);
    NAVBAR — appears after hero, sticks to top
    ══════════════════════════════════════════════════════ */
 function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
-  const [ios, setIos] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIos(isIOS());
     setIsMobile(window.innerWidth < 768);
   }, []);
 
@@ -43,7 +41,7 @@ function Navbar({ onOpenContact }: { onOpenContact: () => void }) {
     <nav
       className="fixed top-0 left-0 w-full z-50"
     >
-      <div className={`border-b border-[#f5f5f5]/5 ${ios || isMobile ? "bg-[#050505]/95" : "bg-[#050505]/85 backdrop-blur-md"}`}>
+      <div className={`border-b border-[#f5f5f5]/5 ${isMobile ? "bg-[#050505]/95" : "bg-[#050505]/85 backdrop-blur-md"}`}>
         <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-3 md:py-4 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex-shrink-0">
