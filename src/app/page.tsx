@@ -22,6 +22,13 @@ const ContactModal = dynamic(() => import("@/components/ContactModal"), { ssr: f
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
+// ─── iOS: Kill ALL GSAP scroll listeners globally ───
+// registerPlugin adds global scroll/resize listeners even without instances.
+// This removes them entirely on iOS — native scroll only.
+if (typeof window !== 'undefined' && isIOS()) {
+  ScrollTrigger.disable();
+}
+
 /* ══════════════════════════════════════════════════════
    NAVBAR — appears after hero, sticks to top
    ══════════════════════════════════════════════════════ */
