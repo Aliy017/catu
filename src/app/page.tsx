@@ -22,16 +22,6 @@ const ContactModal = dynamic(() => import("@/components/ContactModal"), { ssr: f
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-// ─── iOS: Kill ALL GSAP activity ───
-// 1. ScrollTrigger.disable() — removes global scroll/resize listeners
-// 2. gsap.ticker.sleep() — stops the requestAnimationFrame loop
-// Without this, GSAP's ticker runs ~60fps even with no animations,
-// consuming CPU and competing with iOS native scroll.
-if (typeof window !== 'undefined' && isIOS()) {
-  ScrollTrigger.disable();
-  gsap.ticker.sleep();
-}
-
 /* ══════════════════════════════════════════════════════
    NAVBAR — appears after hero, sticks to top
    ══════════════════════════════════════════════════════ */
@@ -113,6 +103,14 @@ export default function Home() {
   const [contactOpen, setContactOpen] = useState(false);
   const openContact = useCallback(() => setContactOpen(true), []);
   const closeContact = useCallback(() => setContactOpen(false), []);
+
+  /* ─── iOS/iPad: Kill ALL GSAP activity IMMEDIATELY ─── */
+  useEffect(() => {
+    if (isIOS()) {
+      ScrollTrigger.disable();
+      gsap.ticker.sleep();
+    }
+  }, []);
 
   /* Fade-in refs — iOS uses IntersectionObserver, others use GSAP ScrollTrigger */
   const fadeRefs = useRef<(HTMLDivElement | null)[]>([]);
