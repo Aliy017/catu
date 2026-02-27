@@ -104,14 +104,6 @@ export default function Home() {
   const openContact = useCallback(() => setContactOpen(true), []);
   const closeContact = useCallback(() => setContactOpen(false), []);
 
-  /* ─── iOS/iPad: Kill ALL GSAP activity IMMEDIATELY ─── */
-  useEffect(() => {
-    if (isIOS()) {
-      ScrollTrigger.disable();
-      gsap.ticker.sleep();
-    }
-  }, []);
-
   /* Fade-in refs — iOS uses IntersectionObserver, others use GSAP ScrollTrigger */
   const fadeRefs = useRef<(HTMLDivElement | null)[]>([]);
   const partnerGridRef = useRef<HTMLDivElement>(null);
