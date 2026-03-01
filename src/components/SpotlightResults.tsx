@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isIOS } from "./iosDetect";
@@ -23,70 +24,70 @@ interface PortfolioItem {
 const PORTFOLIO: PortfolioItem[] = [
     {
         id: 1,
-        title: "Franklin Brend Strategiyasi",
+        title: "Franklin",
         category: "SMM",
-        desc: "Brendni qayta shakllantirish va savdo hajmini 3 barobar oshirish.",
+        desc: "Franklin brendi uchun kontent marketing xizmati ko'rsatildi.",
         gradient: "linear-gradient(135deg, #1e3a5f 0%, #0a0a0a 40%, #1a1a2e 100%)",
         accent: "#3B82F6",
-        fullDesc: "Franklin brendining ijtimoiy tarmoqlardagi imidjini tubdan yangilash, maqsadli auditoriyani aniqlash va kontent strategiyasini ishlab chiqish. Natijada brend tanilishi 2.5 barobar oshdi va savdo hajmi sezilarli ko'paydi.",
+        fullDesc: "Amalga oshirilgan ishlar: ijtimoiy tarmoqlar uchun strategik kontent yo'nalishini ishlab chiqish, noodatiy va kreativ g'oyalar asosida kontent yaratish, brend imidjini mustahkamlashga qaratilgan kommunikatsiya, auditoriya bilan faol va tizimli muloqot. Natija: noodatiy kontent yondashuvi orqali brend obro'si yanada oshirildi va bozordagi pozitsiyasi kuchaytirildi.",
     },
     {
         id: 2,
-        title: "Rivoj-98 Ijtimoiy Tarmoqlar",
+        title: "Rivoj-98",
         category: "Marketing",
-        desc: "Instagram va Telegram orqali faol auditoriya shakllantirish.",
+        desc: "Rivoj-98 kompaniyasi uchun 7 oy davomida kompleks marketing va SMM xizmatlari ko'rsatildi.",
         gradient: "linear-gradient(135deg, #064e3b 0%, #0a0a0a 40%, #0d1b2a 100%)",
         accent: "#10B981",
-        fullDesc: "Rivoj-98 kompaniyasi uchun to'liq marketing strategiyasini yaratish — raqamli reklama, brend qo'llanma va pozitsionerlash. Instagram va Telegramda faol auditoriya shakllantirish orqali mijozlar bazasini kengaytirish.",
+        fullDesc: "Amalga oshirilgan ishlar: brend pozitsionerlash va kommunikatsiya strategiyasini ishlab chiqish, Instagram va Telegramda tizimli kontent yuritish, raqamli reklama kampaniyalarini yo'lga qo'yish, ishlab chiqarish va mahsulotni ishonchga asoslangan tarzda taqdim etish. Natija: brend taniqliligi respublika miqyosida oshirildi va kompaniya bozorda yanada kuchli pozitsiyaga ega bo'ldi.",
     },
     {
         id: 3,
-        title: "Beshbola Game Club Reklama",
+        title: "Beshbola Game Club",
         category: "Marketing",
-        desc: "Maqsadli reklama orqali yangi mijozlar oqimini yo'lga qo'yish.",
+        desc: "Beshbola Game Club uchun 2 yildan ortiq muddat davomida kompleks marketing va SMM boshqaruvi olib borildi.",
         gradient: "linear-gradient(135deg, #312e81 0%, #0a0a0a 40%, #1e1b4b 100%)",
         accent: "#8B5CF6",
-        fullDesc: "O'yin klubi uchun marketing kampaniyasini yaratib, maqsadli reklama orqali yangi mijozlar oqimini barqaror yo'lga qo'yish. Geo-targetlash va maxsus aksiyalar orqali doimiy mijozlar bazasini shakllantirish.",
+        fullDesc: "Amalga oshirilgan ishlar: Instagram sahifasini noldan qurish va vizual konsept yaratish, kontent strategiya va muntazam video/Reels formatlari, maqsadli reklama kampaniyalari va geo-targetlash, aksiyalar orqali mijoz oqimini oshirish, doimiy auditoriya va community shakllantirish. Natija: Instagram 0 dan rivojlantirilib, Beshbola Game Club Farg'onadagi eng mashhur game klublar qatoriga olib chiqildi.",
     },
     {
         id: 4,
-        title: "MIG Build Video Kontent",
+        title: "MIG Build",
         category: "Performance",
-        desc: "Qurilish kompaniyasi uchun premium video lavhalar ishlab chiqish.",
+        desc: "MIG Build qurilish kompaniyasi uchun to'liq performance marketing strategiyasini ishlab chiqish va amalga oshirish.",
         gradient: "linear-gradient(135deg, #4c1d2e 0%, #0a0a0a 40%, #2a1a1a 100%)",
         accent: "#F43F5E",
-        fullDesc: "MIG Build qurilish kompaniyasi uchun to'liq performance marketing strategiyasini amalga oshirish. Premium video lavhalar ishlab chiqish, raqamli reklama kampaniyalarini optimallashtirish va konversiya darajasini oshirish.",
+        fullDesc: "Amalga oshirilgan ishlar: premium video kontent ishlab chiqish, target reklama kampaniyalarini sozlash va optimallashtirish, lid yig'ish va sotuv funnelini qurish, konversiyani oshirish uchun doimiy A/B testlar. Natija: reklama budjeti — $500, yakuniy sotuv — 20 ta xonadon. Yuqori ROI va samarali lid konversiyasi ta'minlandi.",
     },
     {
         id: 5,
-        title: "Texno Sifat Brend Qurish",
+        title: "Texno Sifat",
         category: "SMM",
-        desc: "Texnologiya brendini noldan yaratish va bozorga chiqarish.",
+        desc: "Maishiy texnika sotuvchi do'kon uchun Instagram sahifasini noldan qurish va onlayn savdoni tizimli yo'lga qo'yish loyihasi.",
         gradient: "linear-gradient(135deg, #164e63 0%, #0a0a0a 40%, #0c1d29 100%)",
         accent: "#06B6D4",
-        fullDesc: "Texnologiya brendini noldan yaratish — logotip dizaynidan to ijtimoiy tarmoqlar strategiyasigacha. SMM orqali brendni bozorga chiqarish, kontent plan yaratish va doimiy auditoriya bilan muloqot qurish.",
+        fullDesc: "Amalga oshirilgan ishlar: sahifani to'liq upakovka qilish (vizual, bio, positioning), kontent strategiya va Reels formatlari ishlab chiqish, mahsulotlarni sotuvga yo'naltirilgan tarzda taqdim etish, target reklama orqali lid oqimini shakllantirish, online buyurtma va yetkazib berish jarayonini tizimlashtirish. Natija: yoz mavsumida viloyat bo'ylab kuniga o'rtacha 20–30 ta maishiy texnika yetkazib berish darajasiga chiqildi.",
     },
     {
         id: 6,
-        title: "Ferton.uz SMM Boshqaruvi",
+        title: "Ferton.uz",
         category: "SMM",
-        desc: "Kundalik kontent rejasi va auditoriya bilan muloqot.",
+        desc: "Farg'ona viloyatidagi yirik avtoklav gazobeton ishlab chiqarish zavodi uchun kompleks SMM boshqaruvi.",
         gradient: "linear-gradient(135deg, #065f46 0%, #0a0a0a 40%, #0f2d1f 100%)",
         accent: "#34D399",
-        fullDesc: "Ferton.uz onlayn do'koni uchun to'liq SMM boshqaruvi — kundalik kontent rejasi, stories strategiya, auditoriya bilan faol muloqot va savdo konversiyasini oshirish. Mahsulotlarni kreativ tarzda taqdim etish.",
+        fullDesc: "Asosiy maqsad: Brend taniqliligini hududiy va respublika darajasida oshirish hamda buyurtmalar (zakazlar) sonini ko'paytirish. Amalga oshirilgan ishlar: strategik kontent reja ishlab chiqish, ishlab chiqarish jarayonini ko'rsatadigan video va Reels kontentlar, mahsulot sifatini isbotlovchi ekspert kontent.",
     },
     {
         id: 7,
-        title: "Le Crayon Reklama Kampaniyasi",
-        category: "SMM",
-        desc: "Maqsadli reklama orqali onlayn savdoni yo'lga qo'yish.",
+        title: "Le Crayon",
+        category: "NTM",
+        desc: "Le Crayon maktabi uchun ijtimoiy tarmoqlarni strategik rivojlantirish va brend taniqliligini oshirish loyihasi.",
         gradient: "linear-gradient(135deg, #3b1f7e 0%, #0a0a0a 40%, #2e1065 100%)",
         accent: "#A78BFA",
-        fullDesc: "Le Crayon san'at studiyasi uchun ijtimoiy tarmoqlarda reklama kampaniyasini ishlab chiqish va amalga oshirish. Kreativ kontent, influencer marketing va maqsadli reklama orqali onlayn savdoni barqaror o'sishga olib kelish.",
+        fullDesc: "Kontent marketing, kreativ Reels formatlari va maqsadli reklama kampaniyalari orqali maktabning onlayn ko'rinishini kuchaytirish, auditoriya ishonchini shakllantirish.",
     },
     {
         id: 8,
-        title: "Humo Med Servis Kontent",
+        title: "Humo Med Servis",
         category: "Marketing",
         desc: "Tibbiyot markazi uchun professional foto va video ishlab chiqish.",
         gradient: "linear-gradient(135deg, #7c2d12 0%, #0a0a0a 40%, #431407 100%)",
@@ -168,7 +169,7 @@ function ExpandedModal({ item, onClose }: { item: PortfolioItem; onClose: () => 
             {/* Animated gradient border */}
             <div
                 ref={contentRef}
-                className="relative w-full max-w-[92vw] md:max-w-3xl min-h-[45vh] md:min-h-[450px] max-h-[90vh] rounded-[32px] md:rounded-[40px] p-[1.5px] flex flex-col shadow-2xl"
+                className="relative w-full max-w-[92vw] md:max-w-3xl min-h-[45vh] md:min-h-[450px] max-h-[85vh] rounded-[32px] md:rounded-[40px] p-[1.5px] flex flex-col shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
                 style={{
                     opacity: 0,
@@ -200,18 +201,18 @@ function ExpandedModal({ item, onClose }: { item: PortfolioItem; onClose: () => 
                     />
 
                     {/* ── Scrollable Content ── */}
-                    <div className="relative z-[5] flex-1 px-6 py-12 md:px-16 md:py-16 flex flex-col justify-center overflow-y-auto">
+                    <div className="relative z-[5] flex-1 px-10 py-12 md:px-20 md:py-16 flex flex-col justify-center overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
 
                         {/* Title — centered, smaller, normal font */}
                         <h2 ref={setReveal(0)} className="font-[family-name:var(--font-rounded)] text-[22px] md:text-3xl font-bold text-white leading-tight text-center mb-4 md:mb-6 mt-auto">
                             {item.title}
                         </h2>
 
-                        {/* Accent line — full width under title, thin */}
+                        {/* Accent line — spans title width */}
                         <div ref={setReveal(1)}
-                            className="h-[1px] w-full max-w-[200px] mx-auto mb-6 md:mb-10 rounded-full"
+                            className="h-[2px] w-full max-w-[320px] mx-auto mb-8 md:mb-10 rounded-full"
                             style={{
-                                background: `linear-gradient(90deg, transparent, ${item.accent}80, transparent)`,
+                                background: `linear-gradient(90deg, transparent, ${item.accent}, transparent)`,
                             }}
                         />
 
@@ -250,11 +251,18 @@ export default function SpotlightResults() {
     const gridRef = useRef<HTMLDivElement>(null);
     const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [expandedItem, setExpandedItem] = useState<PortfolioItem | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         if (!gridRef.current) return;
         const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
         if (isIOS()) return; // iOS: cards visible by default, no ScrollTrigger
+
+        gsap.registerPlugin(ScrollTrigger);
         gsap.set(cards, { y: 60, opacity: 0, scale: 0.95 });
 
         let trigger: ScrollTrigger;
@@ -291,11 +299,12 @@ export default function SpotlightResults() {
                 </div>
             </div>
 
-            {expandedItem && (
+            {mounted && expandedItem && createPortal(
                 <ExpandedModal
                     item={expandedItem}
                     onClose={() => setExpandedItem(null)}
-                />
+                />,
+                document.body
             )}
         </>
     );
