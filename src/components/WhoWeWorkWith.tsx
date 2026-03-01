@@ -37,131 +37,112 @@ export default function WhoWeWorkWith() {
     useEffect(() => {
         if (!sectionRef.current) return;
 
+        if (isIOS()) {
+            // ─── iOS: IntersectionObserver triggers CSS .ios-visible class ───
+            const elements = sectionRef.current.querySelectorAll('.ios-reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('ios-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            elements.forEach(el => observer.observe(el));
+
+            return () => observer.disconnect();
+        }
+
+        // ─── Android / Desktop: GSAP pin timeline ───
         let ctx: gsap.Context;
         const timer = setTimeout(() => {
+            gsap.registerPlugin(ScrollTrigger);
             ctx = gsap.context(() => {
-                if (isIOS()) {
-                    // ─── iOS: Simple scroll-triggered fade/slide (no pin) ───
-                    gsap.fromTo(titleWorkRef.current,
-                        { y: 40, opacity: 0 },
-                        {
-                            y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
-                            scrollTrigger: { trigger: titleWorkRef.current, start: "top 85%", toggleActions: "play none none none" }
-                        }
-                    );
-                    if (listWorkRef.current) {
-                        gsap.fromTo(listWorkRef.current.children,
-                            { y: 30, opacity: 0 },
-                            {
-                                y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power3.out",
-                                scrollTrigger: { trigger: listWorkRef.current, start: "top 85%", toggleActions: "play none none none" }
-                            }
-                        );
-                    }
-                    gsap.set(listDontRef.current, { visibility: "visible" });
-                    gsap.fromTo(titleDontRef.current,
-                        { y: 40, opacity: 0 },
-                        {
-                            y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
-                            scrollTrigger: { trigger: titleDontRef.current, start: "top 85%", toggleActions: "play none none none" }
-                        }
-                    );
-                    if (listDontRef.current) {
-                        gsap.fromTo(listDontRef.current.children,
-                            { y: 30, opacity: 0 },
-                            {
-                                y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power3.out",
-                                scrollTrigger: { trigger: listDontRef.current, start: "top 85%", toggleActions: "play none none none" }
-                            }
-                        );
-                    }
-                    gsap.fromTo(glowRef.current,
-                        { opacity: 0, scale: 0.3 },
-                        {
-                            opacity: 0.15, scale: 1, duration: 1, ease: "power2.out",
-                            scrollTrigger: { trigger: sectionRef.current, start: "top 80%", toggleActions: "play none none none" }
-                        }
-                    );
-                } else {
-                    // ─── Android / Desktop: Original pin timeline ───
-                    gsap.set(titleWorkRef.current, { y: "100vh", opacity: 0, scale: 0.7 });
-                    gsap.set(glowRef.current, { opacity: 0, scale: 0.3 });
-                    gsap.set(titleDontRef.current, { y: 60, opacity: 0, scale: 0.9 });
-                    if (listWorkRef.current) gsap.set(listWorkRef.current.children, { y: 50, opacity: 0 });
-                    if (listDontRef.current) {
-                        gsap.set(listDontRef.current.children, { y: 50, opacity: 0 });
-                        gsap.set(listDontRef.current, { visibility: "hidden" });
-                    }
-
-                    const tl = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: sectionRef.current,
-                            start: "top top",
-                            end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=150%" : "+=350%",
-                            pin: true,
-                            scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.3 : 1,
-                            anticipatePin: 1,
-                        },
-                    });
-
-                    tl.to(titleWorkRef.current, { y: 0, opacity: 1, scale: 1, duration: 2, ease: "power3.out" }, 0);
-                    tl.to(glowRef.current, { opacity: 0.2, scale: 1, duration: 2, ease: "power2.out" }, 0.5);
-                    if (listWorkRef.current) {
-                        tl.to(listWorkRef.current.children, { y: 0, opacity: 1, duration: 0.6, stagger: 0.2, ease: "power3.out" }, 2.5);
-                    }
-                    tl.to({}, { duration: 2 }, 4.5);
-                    tl.to(titleWorkRef.current, { y: -80, opacity: 0, duration: 1.2, ease: "power2.in" }, 6.5);
-                    if (listWorkRef.current) {
-                        tl.to(listWorkRef.current.children, { y: -30, opacity: 0, stagger: 0.06, duration: 0.4, ease: "power2.in" }, 6.5);
-                    }
-                    tl.to(glowRef.current, { opacity: 0.06, duration: 1 }, 7);
-                    tl.set(listDontRef.current, { visibility: "visible" }, 7.5);
-                    tl.to(titleDontRef.current, { y: 0, opacity: 1, scale: 1, duration: 1.5, ease: "power3.out" }, 7.5);
-                    if (listDontRef.current) {
-                        tl.to(listDontRef.current.children, { y: 0, opacity: 1, duration: 0.5, stagger: 0.15, ease: "power3.out" }, 8);
-                    }
-                    tl.to({}, { duration: 2 }, 10);
-                    tl.to(titleDontRef.current, { y: -60, opacity: 0, duration: 1, ease: "power2.in" }, 12);
-                    if (listDontRef.current) {
-                        tl.to(listDontRef.current.children, { y: -20, opacity: 0, stagger: 0.05, duration: 0.4, ease: "power2.in" }, 12);
-                    }
-                    tl.to(glowRef.current, { opacity: 0, duration: 1 }, 12.2);
+                gsap.set(titleWorkRef.current, { y: "100vh", opacity: 0, scale: 0.7 });
+                gsap.set(glowRef.current, { opacity: 0, scale: 0.3 });
+                gsap.set(titleDontRef.current, { y: 60, opacity: 0, scale: 0.9 });
+                if (listWorkRef.current) gsap.set(listWorkRef.current.children, { y: 50, opacity: 0 });
+                if (listDontRef.current) {
+                    gsap.set(listDontRef.current.children, { y: 50, opacity: 0 });
+                    gsap.set(listDontRef.current, { visibility: "hidden" });
                 }
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: "top top",
+                        end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=150%" : "+=350%",
+                        pin: true,
+                        scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.3 : 1,
+                        anticipatePin: 1,
+                    },
+                });
+
+                tl.to(titleWorkRef.current, { y: 0, opacity: 1, scale: 1, duration: 2, ease: "power3.out" }, 0);
+                tl.to(glowRef.current, { opacity: 0.2, scale: 1, duration: 2, ease: "power2.out" }, 0.5);
+                if (listWorkRef.current) {
+                    tl.to(listWorkRef.current.children, { y: 0, opacity: 1, duration: 0.6, stagger: 0.2, ease: "power3.out" }, 2.5);
+                }
+                tl.to({}, { duration: 2 }, 4.5);
+                tl.to(titleWorkRef.current, { y: -80, opacity: 0, duration: 1.2, ease: "power2.in" }, 6.5);
+                if (listWorkRef.current) {
+                    tl.to(listWorkRef.current.children, { y: -30, opacity: 0, stagger: 0.06, duration: 0.4, ease: "power2.in" }, 6.5);
+                }
+                tl.to(glowRef.current, { opacity: 0.06, duration: 1 }, 7);
+                tl.set(listDontRef.current, { visibility: "visible" }, 7.5);
+                tl.to(titleDontRef.current, { y: 0, opacity: 1, scale: 1, duration: 1.5, ease: "power3.out" }, 7.5);
+                if (listDontRef.current) {
+                    tl.to(listDontRef.current.children, { y: 0, opacity: 1, duration: 0.5, stagger: 0.15, ease: "power3.out" }, 8);
+                }
+                tl.to({}, { duration: 2 }, 10);
+                tl.to(titleDontRef.current, { y: -60, opacity: 0, duration: 1, ease: "power2.in" }, 12);
+                if (listDontRef.current) {
+                    tl.to(listDontRef.current.children, { y: -20, opacity: 0, stagger: 0.05, duration: 0.4, ease: "power2.in" }, 12);
+                }
+                tl.to(glowRef.current, { opacity: 0, duration: 1 }, 12.2);
             }, sectionRef);
         }, 500);
 
         return () => { clearTimeout(timer); ctx?.revert(); };
     }, []);
 
-    // ─── iOS: vertical layout (both lists stacked, scrollable) ───
+    // ─── iOS: premium vertical layout with CSS-driven reveals ───
     if (ios) {
         return (
-            <section ref={sectionRef} className="relative w-full bg-[#050505] overflow-hidden py-[15vh]">
+            <section ref={sectionRef} className="relative w-full bg-[#050505] overflow-hidden py-[10vh]">
                 <div ref={glowRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                    w-[300px] h-[300px] rounded-full blur-[80px] opacity-0 bg-[#FF2020] pointer-events-none z-0" />
+                    w-[300px] h-[300px] rounded-full blur-[80px] bg-[#FF2020]/15 pointer-events-none z-0" />
                 <div className="relative z-20 px-6 max-w-lg mx-auto">
-                    <h2 ref={titleWorkRef} className="font-[family-name:var(--font-heading)]
-                        text-[22px] sm:text-4xl font-bold uppercase text-[#f5f5f5] text-center leading-[0.9] mb-8">
+                    {/* ── Biz kimlar bilan ishlaymiz ── */}
+                    <h2 ref={titleWorkRef} className="ios-reveal font-[family-name:var(--font-heading)]
+                        text-[24px] sm:text-4xl font-bold uppercase text-[#f5f5f5] text-center leading-tight mb-8">
                         Biz kimlar bilan{" "}
                         <span className="text-[#FF2020] drop-shadow-[0_0_30px_rgba(255,32,32,0.4)]">ishlaymiz</span>
                     </h2>
-                    <div ref={listWorkRef} className="flex flex-col items-center gap-4 mb-[15vh]">
+                    <div ref={listWorkRef} className="flex flex-col items-center gap-5 mb-[12vh]">
                         {WORK_WITH.map((item, i) => (
-                            <div key={i} className="flex items-center gap-3">
-                                <span className="w-[6px] h-[6px] rounded-full bg-[#FF2020] shadow-[0_0_12px_rgba(255,32,32,0.6)] flex-shrink-0" />
-                                <span className="font-sans text-sm sm:text-base text-[#f5f5f5]/70 leading-relaxed">{item}</span>
+                            <div key={i} className="ios-reveal flex items-center gap-3"
+                                style={{ transitionDelay: `${i * 80}ms` }}>
+                                <span className="w-[7px] h-[7px] rounded-full bg-[#FF2020] shadow-[0_0_12px_rgba(255,32,32,0.6)] flex-shrink-0" />
+                                <span className="font-sans text-[15px] sm:text-base text-[#f5f5f5]/75 leading-relaxed">{item}</span>
                             </div>
                         ))}
                     </div>
-                    <h2 ref={titleDontRef} className="font-[family-name:var(--font-heading)]
-                        text-[22px] sm:text-4xl font-bold uppercase text-[#f5f5f5] text-center leading-[0.9] mb-8">
+
+                    {/* ── Separator ── */}
+                    <div className="ios-reveal w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-[10vh]" />
+
+                    {/* ── Biz kimlar bilan ishlamaymiz ── */}
+                    <h2 ref={titleDontRef} className="ios-reveal font-[family-name:var(--font-heading)]
+                        text-[24px] sm:text-4xl font-bold uppercase text-[#f5f5f5] text-center leading-tight mb-8">
                         Biz kimlar bilan <span className="text-[#f5f5f5]/30">ishlamaymiz</span>
                     </h2>
-                    <div ref={listDontRef} className="flex flex-col items-center gap-4">
+                    <div ref={listDontRef} className="flex flex-col items-center gap-5">
                         {DONT_WORK_WITH.map((item, i) => (
-                            <div key={i} className="flex items-center gap-3">
-                                <span className="w-[6px] h-[6px] rounded-full bg-[#f5f5f5]/15 flex-shrink-0" />
-                                <span className="font-sans text-sm sm:text-base text-[#f5f5f5]/30 leading-relaxed">{item}</span>
+                            <div key={i} className="ios-reveal flex items-center gap-3"
+                                style={{ transitionDelay: `${i * 80}ms` }}>
+                                <span className="w-[7px] h-[7px] rounded-full bg-[#f5f5f5]/15 flex-shrink-0" />
+                                <span className="font-sans text-[15px] sm:text-base text-[#f5f5f5]/30 leading-relaxed">{item}</span>
                             </div>
                         ))}
                     </div>

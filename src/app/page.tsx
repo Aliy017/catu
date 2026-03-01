@@ -220,7 +220,7 @@ export default function Home() {
         {/* ── Headline 1 ── */}
         <h1
           className="font-[family-name:var(--font-heading)] text-[clamp(1.8rem,5vw,4.5rem)] font-bold uppercase leading-[1.1] tracking-tight
-                     text-center hero-fade-in"
+                     text-center hero-fade-in hero-delay-1"
         >
           <span className="text-[#f5f5f5]">Tasodifiy marketingni </span>
           <span className="text-[#FF2020]">to&apos;xtating.</span>
@@ -231,22 +231,23 @@ export default function Home() {
         </h1>
 
         {/* ── Divider line ── */}
-        <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[#FF2020] to-transparent hero-fade-in"
-          style={{ marginTop: '24px', marginBottom: '24px', animationDelay: '0.3s' }} />
+        <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[#FF2020] to-transparent hero-fade-in hero-delay-2"
+          style={{ marginTop: '24px', marginBottom: '24px' }} />
 
-        {/* ── Headline 2 ── */}
-        <p
-          className="font-[family-name:var(--font-body)] text-[clamp(0.85rem,2.5vw,1.6rem)] leading-[1.6]
+        <div className="hero-fade-in hero-delay-3">
+          <p
+            className="font-[family-name:var(--font-body)] text-[clamp(0.85rem,2.5vw,1.6rem)] leading-[1.6]
                      text-center max-w-3xl mx-auto px-4 text-sweep-red overflow-hidden break-words"
-        >
-          Reklama xarajat emas, <span className="font-semibold">investitsiya</span> bo&apos;lishi kerak.
-          <br className="hidden sm:block" />{" "}
-          Biz esa uni <span className="font-semibold">foydaga</span> aylantiramiz.
-        </p>
+          >
+            Reklama xarajat emas, <span className="font-semibold">investitsiya</span> bo&apos;lishi kerak.
+            <br />{" "}
+            Biz esa uni <span className="font-semibold">foydaga</span> aylantiramiz.
+          </p>
+        </div>
 
         {/* ── CTA tugma ── */}
-        <div className="flex justify-center hero-fade-in"
-          style={{ marginTop: '48px', animationDelay: '0.8s' }}>
+        <div className="flex justify-center hero-fade-in hero-delay-4"
+          style={{ marginTop: '48px' }}>
           <BubbleButton compact onOpen={openContact} label="Dastlabki audit uchun" />
         </div>
       </section>

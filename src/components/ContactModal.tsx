@@ -80,6 +80,9 @@ function CustomSelect({
 
             {/* Dropdown panel */}
             <div
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
                 className={`absolute left-0 right-0 z-[60]
                     bg-[#131318] border border-white/[0.12]
                     rounded-[14px] md:rounded-[16px]
@@ -88,16 +91,18 @@ function CustomSelect({
                     ${isOpen
                         ? "opacity-100 scale-y-100 pointer-events-auto"
                         : "opacity-0 scale-y-[0.92] pointer-events-none"
-                    }`}
+                    } premium-scrollbar`}
                 style={{
                     ...(dropUp ? { bottom: 'calc(100% + 8px)' } : { top: 'calc(100% + 8px)' }),
-                    maxHeight: '300px',
+                    maxHeight: '200px',
                     overflowY: 'auto',
                     overflowX: 'hidden',
+                    overscrollBehavior: 'contain',
+                    WebkitOverflowScrolling: 'touch',
                 }}
             >
                 <div style={{ padding: "6px" }}>
-                    {options.map((opt) => (
+                    {options.map((opt, i) => (
                         <button
                             key={opt}
                             type="button"
@@ -106,11 +111,12 @@ function CustomSelect({
                                 font-[family-name:var(--font-rounded)] text-[14px] md:text-[15px] font-medium
                                 transition-colors duration-150 flex items-center gap-3
                                 rounded-[10px] md:rounded-[12px]
+                                ${isOpen ? 'dropdown-item-in' : ''}
                                 ${value === opt
                                     ? "text-[#FF2020] bg-[#FF2020]/[0.08]"
                                     : "text-white/65 hover:text-white hover:bg-white/[0.06] active:bg-white/[0.10]"
                                 }`}
-                            style={{ padding: "14px 18px" }}
+                            style={{ padding: "14px 18px", animationDelay: isOpen ? `${i * 70}ms` : '0ms' }}
                         >
                             {value === opt && (
                                 <svg className="w-4 h-4 flex-shrink-0 text-[#FF2020]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -136,12 +142,13 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [goal, setGoal] = useState("");
-    const [revenue, setRevenue] = useState(REVENUES[0]);
+    const [revenue, setRevenue] = useState("");
     const [goalOpen, setGoalOpen] = useState(false);
     const [revenueOpen, setRevenueOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState("");
+    const [fieldErrors, setFieldErrors] = useState<{ name?: string; phone?: string; goal?: string }>({});
 
     /* ── Open animation ── */
     useEffect(() => {
@@ -158,8 +165,20 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.3)", delay: 0.1 }
             );
         }
+        const scrollY = window.scrollY;
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.left = "0";
+        document.body.style.right = "0";
         document.body.style.overflow = "hidden";
-        return () => { document.body.style.overflow = ""; };
+        return () => {
+            document.body.style.position = "";
+            document.body.style.top = "";
+            document.body.style.left = "";
+            document.body.style.right = "";
+            document.body.style.overflow = "";
+            window.scrollTo(0, scrollY);
+        };
     }, [isOpen]);
 
     /* ── Close animation ── */
@@ -196,11 +215,38 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         if (d.length > 5) f += " " + d.slice(5, 7);
         if (d.length > 7) f += " " + d.slice(7, 9);
         setPhone(f);
+        if (fieldErrors.phone) setFieldErrors(prev => ({ ...prev, phone: undefined }));
+        if (submitError) setSubmitError("");
+    };
+
+    const handleNameChange = (val: string) => {
+        setName(val);
+        if (fieldErrors.name) setFieldErrors(prev => ({ ...prev, name: undefined }));
+        if (submitError) setSubmitError("");
+    };
+
+    const handleGoalSelect = (val: string) => {
+        setGoal(val);
+        setGoalOpen(false);
+        if (fieldErrors.goal) setFieldErrors(prev => ({ ...prev, goal: undefined }));
+        if (submitError) setSubmitError("");
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (submitting) return;
+
+        // ── Client-side validation ──
+        const errors: { name?: string; phone?: string; goal?: string } = {};
+        if (!name.trim()) errors.name = "Ismingizni kiriting";
+        const phoneDigits = phone.replace(/\s/g, "");
+        if (!phoneDigits || phoneDigits.length < 9) errors.phone = "To'liq telefon raqam kiriting (9 raqam)";
+        if (!goal) errors.goal = "Maqsadni tanlang";
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            return;
+        }
+        setFieldErrors({});
         setSubmitting(true);
         setSubmitError("");
 
@@ -280,7 +326,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     setName("");
                     setPhone("");
                     setGoal("");
-                    setRevenue(REVENUES[0]);
+                    setRevenue("");
                     animateClose();
                 }, 3000);
             } else {
@@ -314,7 +360,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             {/* Centering + scroll wrapper */}
             <div
                 className="relative z-10 w-full h-full overflow-y-auto overscroll-contain
-                            flex items-start justify-center px-5 py-8 md:px-8 md:py-12"
+                            flex items-center justify-center px-5 py-8 md:px-8 md:py-12"
                 onClick={(e) => { if (e.target === e.currentTarget) { closeDropdowns(); animateClose(); } }}
             >
                 {/* ── Card ── */}
@@ -384,14 +430,16 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                         <input
                                             type="text"
                                             value={name}
-                                            onChange={(e) => setName(e.target.value)}
+                                            onChange={(e) => handleNameChange(e.target.value)}
                                             placeholder="Ismingiz"
-                                            className={inputCls}
+                                            className={`${inputCls} ${fieldErrors.name ? 'border-[#FF2020]/50' : ''}`}
                                             style={inputStyle}
                                         />
+                                        {fieldErrors.name && <p className="text-[#FF2020] text-[12px] font-medium" style={{ marginTop: '6px', paddingLeft: '4px' }}>{fieldErrors.name}</p>}
 
                                         {/* Phone */}
-                                        <div className={`flex items-center border border-white/[0.10]
+                                        <div className={`flex items-center border
+                                            ${fieldErrors.phone ? 'border-[#FF2020]/50' : 'border-white/[0.10]'}
                                             hover:border-white/[0.20] focus-within:border-[#FF2020]/40
                                             rounded-[14px] md:rounded-[16px] overflow-hidden transition-all duration-300`}>
                                             <span style={{ paddingLeft: "20px", paddingRight: "6px" }}
@@ -409,6 +457,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                                            placeholder:text-white/25 outline-none"
                                             />
                                         </div>
+                                        {fieldErrors.phone && <p className="text-[#FF2020] text-[12px] font-medium" style={{ marginTop: '6px', paddingLeft: '4px' }}>{fieldErrors.phone}</p>}
 
                                         {/* Goal dropdown */}
                                         <CustomSelect
@@ -417,8 +466,9 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                             options={GOALS}
                                             isOpen={goalOpen}
                                             onToggle={() => { setGoalOpen((p) => !p); setRevenueOpen(false); }}
-                                            onSelect={(v) => { setGoal(v); setGoalOpen(false); }}
+                                            onSelect={handleGoalSelect}
                                         />
+                                        {fieldErrors.goal && <p className="text-[#FF2020] text-[12px] font-medium" style={{ marginTop: '6px', paddingLeft: '4px' }}>{fieldErrors.goal}</p>}
                                     </div>
 
                                     {/* ── Revenue section — separated with padding ── */}
