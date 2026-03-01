@@ -214,14 +214,41 @@ export default function Home() {
 
       {/* ═══════ 1-QISM — ASOSIY SARLAVHA ═══════ */}
       <section
-        className="relative z-20 pb-[5vh] md:pb-[50vh] px-6 md:px-12 max-w-[1400px] mx-auto"
-        style={{ paddingTop: '80px' }}
+        className="relative z-20 min-h-screen flex flex-col justify-center items-center px-6 md:px-12 max-w-[1400px] mx-auto"
+        style={{ paddingTop: '80px', paddingBottom: '10vh' }}
       >
-        <KineticText
-          lines={["NATIJA", "BO'LMAGUNCHA", "XIZMAT", "QILAMIZ."]}
-          className="mb-10"
-          autoPlay
-        />
+        {/* ── Headline 1 ── */}
+        <h1
+          className="font-[family-name:var(--font-heading)] text-[clamp(1.8rem,5vw,4.5rem)] font-bold uppercase leading-[1.1] tracking-tight
+                     text-center hero-fade-in"
+        >
+          <span className="text-[#f5f5f5]">Tasodifiy marketingni </span>
+          <span className="text-[#FF2020]">to&apos;xtating.</span>
+          <br />
+          <span className="bg-clip-text text-transparent bg-gradient-to-b from-[#f5f5f5] from-30% to-[#FF2020]">
+            Tizimli o&apos;sish vaqti keldi.
+          </span>
+        </h1>
+
+        {/* ── Divider line ── */}
+        <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[#FF2020] to-transparent hero-fade-in"
+          style={{ marginTop: '24px', marginBottom: '24px', animationDelay: '0.3s' }} />
+
+        {/* ── Headline 2 ── */}
+        <p
+          className="font-[family-name:var(--font-body)] text-[clamp(0.85rem,2.5vw,1.6rem)] leading-[1.6]
+                     text-center max-w-3xl mx-auto px-4 text-sweep-red overflow-hidden break-words"
+        >
+          Reklama xarajat emas, <span className="font-semibold">investitsiya</span> bo&apos;lishi kerak.
+          <br className="hidden sm:block" />{" "}
+          Biz esa uni <span className="font-semibold">foydaga</span> aylantiramiz.
+        </p>
+
+        {/* ── CTA tugma ── */}
+        <div className="flex justify-center hero-fade-in"
+          style={{ marginTop: '48px', animationDelay: '0.8s' }}>
+          <BubbleButton compact onOpen={openContact} label="Dastlabki audit uchun" />
+        </div>
       </section>
 
       {/* ═══════ 2-QISM — HAMKORLAR LOGOSI ═══════ */}
@@ -376,7 +403,7 @@ export default function Home() {
           {/* Spacer */}
           <div style={{ height: '120px' }} />
 
-          <BubbleButton onOpen={openContact} />
+          <BubbleButton onOpen={openContact} label="Dastlabki audit uchun" />
         </div>
       </section>
 
