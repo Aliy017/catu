@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLowPower } from "./LowPowerContext";
-import { isIOS } from "./iosDetect";
-
-// ScrollTrigger registered inside useEffect (non-iOS only)
 
 interface KineticTextProps {
     lines: string[];
@@ -23,44 +18,29 @@ export default function KineticText({
 }: KineticTextProps) {
     const { isLowPower } = useLowPower();
     const containerRef = useRef<HTMLDivElement>(null);
-    const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     useEffect(() => {
-        if (!containerRef.current || isLowPower || autoPlay || isIOS()) return;
+        if (!containerRef.current || isLowPower || autoPlay) return;
 
-        // Only use GSAP for scroll-triggered (non-autoPlay) instances
-        const ctx = gsap.context(() => {
-            const inners = lineRefs.current.map(el => el?.querySelector(".kinetic-inner")).filter(Boolean);
-
-            gsap.fromTo(
-                inners,
-                { yPercent: 100, opacity: 0 },
-                {
-                    yPercent: 0,
-                    opacity: 1,
-                    duration: 1,
-                    ease: "power4.out",
-                    stagger: 0.1,
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top 85%",
-                        toggleActions: "play none none none",
-                    },
+        // Observe the CONTAINER (not the hidden children)
+        const container = containerRef.current;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    container.classList.add('kinetic-container-visible');
+                    observer.unobserve(container);
                 }
-            );
-        }, containerRef);
+            });
+        }, { threshold: 0.1 });
 
-        return () => ctx.revert();
-    }, [lines, isLowPower, autoPlay]);
+        observer.observe(container);
+        return () => observer.disconnect();
+    }, [isLowPower, autoPlay]);
 
     return (
-        <div ref={containerRef} className={className}>
+        <div ref={containerRef} className={`${className} kinetic-container`}>
             {lines.map((line, index) => (
-                <div
-                    key={index}
-                    ref={(el) => { lineRefs.current[index] = el; }}
-                    className="overflow-hidden py-[2px]"
-                >
+                <div key={index} className="overflow-hidden py-[2px]">
                     <div
                         className={`kinetic-inner font-[family-name:var(--font-heading)] 
                                      text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl 
@@ -73,7 +53,9 @@ export default function KineticText({
                                     ? {
                                         animation: `kinetic-rise 0.7s cubic-bezier(0.22,1,0.36,1) ${index * 0.08}s both`,
                                     }
-                                    : { opacity: 0, transform: 'translateY(100%)' }
+                                    : {
+                                        transitionDelay: `${index * 0.1}s`,
+                                    }
                         }
                     >
                         {line}
