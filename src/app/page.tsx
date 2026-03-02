@@ -407,7 +407,7 @@ export default function Home() {
           {/* Spacer */}
           <div style={{ height: '120px' }} />
 
-          <BubbleButton onOpen={openContact} label="Dastlabki audit uchun" />
+          <BubbleButton compact onOpen={openContact} label="Dastlabki audit uchun" />
         </div>
       </section>
 
