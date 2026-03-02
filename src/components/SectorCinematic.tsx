@@ -56,6 +56,28 @@ const SECTORS: SectorItem[] = [
 export default function SectorCinematic() {
     const containerRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+        if (!containerRef.current) return;
+        const cards = containerRef.current.querySelectorAll('.sector-card');
+        cards.forEach((card, i) => {
+            const el = card as HTMLElement;
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px) scale(0.92)';
+            el.style.transition = `opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${i * 150}ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${i * 150}ms`;
+        });
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    (entry.target as HTMLElement).style.opacity = '1';
+                    (entry.target as HTMLElement).style.transform = 'translateY(0) scale(1)';
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        cards.forEach(card => obs.observe(card));
+        return () => obs.disconnect();
+    }, []);
+
     return (
         <div ref={containerRef} className="w-full flex justify-center">
             <div className="w-full max-w-[1200px] grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 px-4 md:px-0">
@@ -99,7 +121,7 @@ function CinematicCard({ sector }: { sector: SectorItem }) {
         <div
             ref={cardRef}
             onClick={ios ? () => setTapped(!tapped) : undefined}
-            className={`group relative rounded-2xl p-[2px] bg-gradient-to-br
+            className={`sector-card group relative rounded-2xl p-[2px] bg-gradient-to-br
                         ${tapped ? 'from-[#FF2020]/70 via-white/20 to-[#FF2020]/40' : 'from-[#FF2020]/40 via-white/10 to-[#FF2020]/20'}
                         hover:from-[#FF2020]/70 hover:via-white/20 hover:to-[#FF2020]/40
                         transition-all duration-700 ease-out
