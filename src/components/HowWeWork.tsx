@@ -33,25 +33,31 @@ export default function HowWeWork() {
         const timer = setTimeout(() => {
             ctx = gsap.context(() => {
                 if (isIOS()) {
-                    // ─── iOS: Simple scroll-triggered fade/slide (no pin) ───
-                    stepsRef.current.forEach((el) => {
+                    // ─── iOS: IntersectionObserver with staggered CSS reveals ───
+                    stepsRef.current.forEach((el, i) => {
                         if (!el) return;
-                        gsap.fromTo(
-                            el,
-                            { x: 80, opacity: 0 },
-                            {
-                                x: 0,
-                                opacity: 1,
-                                duration: 0.8,
-                                ease: "power3.out",
-                                scrollTrigger: {
-                                    trigger: el,
-                                    start: "top 85%",
-                                    toggleActions: "play none none none",
-                                },
-                            }
-                        );
+                        // Start hidden
+                        el.style.opacity = '0';
+                        el.style.transform = 'translateX(60px) scale(0.85)';
+                        el.style.transition = `opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${i * 150}ms, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${i * 150}ms`;
                     });
+
+                    const obs = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                // Trigger ALL steps when section is visible
+                                stepsRef.current.forEach((el) => {
+                                    if (!el) return;
+                                    el.style.opacity = '1';
+                                    el.style.transform = 'translateX(0) scale(1)';
+                                });
+                                obs.disconnect();
+                            }
+                        });
+                    }, { threshold: 0.3 });
+
+                    obs.observe(sectionRef.current!);
+                    return;
                 } else {
                     // ─── Android / Desktop: Pin timeline with scrub ───
                     const tl = gsap.timeline({

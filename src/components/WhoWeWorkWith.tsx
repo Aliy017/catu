@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { isIOS } from "./iosDetect";
@@ -32,7 +32,8 @@ export default function WhoWeWorkWith() {
     const listDontRef = useRef<HTMLDivElement>(null);
     const glowRef = useRef<HTMLDivElement>(null);
 
-    const ios = typeof window !== 'undefined' && isIOS();
+    const [ios, setIos] = useState(false);
+    useEffect(() => { setIos(isIOS()); }, []);
 
     useEffect(() => {
         if (!sectionRef.current) return;

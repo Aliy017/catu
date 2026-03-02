@@ -71,7 +71,8 @@ function CinematicCard({ sector }: { sector: SectorItem }) {
     const cardRef = useRef<HTMLDivElement>(null);
     const descRef = useRef<HTMLParagraphElement>(null);
     const [tapped, setTapped] = useState(false);
-    const ios = typeof window !== 'undefined' && isIOS();
+    const [ios, setIos] = useState(false);
+    useEffect(() => { setIos(isIOS()); }, []);
 
     useEffect(() => {
         if (!cardRef.current || !descRef.current || isIOS()) return;
