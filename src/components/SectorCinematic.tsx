@@ -70,6 +70,8 @@ export default function SectorCinematic() {
 function CinematicCard({ sector }: { sector: SectorItem }) {
     const cardRef = useRef<HTMLDivElement>(null);
     const descRef = useRef<HTMLParagraphElement>(null);
+    const [tapped, setTapped] = useState(false);
+    const ios = typeof window !== 'undefined' && isIOS();
 
     useEffect(() => {
         if (!cardRef.current || !descRef.current || isIOS()) return;
@@ -95,16 +97,18 @@ function CinematicCard({ sector }: { sector: SectorItem }) {
         /* ── Premium Frame Wrapper ── */
         <div
             ref={cardRef}
-            className="group relative rounded-2xl p-[2px] bg-gradient-to-br from-[#FF2020]/40 via-white/10 to-[#FF2020]/20
+            onClick={ios ? () => setTapped(!tapped) : undefined}
+            className={`group relative rounded-2xl p-[2px] bg-gradient-to-br
+                        ${tapped ? 'from-[#FF2020]/70 via-white/20 to-[#FF2020]/40' : 'from-[#FF2020]/40 via-white/10 to-[#FF2020]/20'}
                         hover:from-[#FF2020]/70 hover:via-white/20 hover:to-[#FF2020]/40
                         transition-all duration-700 ease-out
-                        shadow-[0_0_20px_rgba(255,32,32,0.08)]
-                        hover:shadow-[0_0_40px_rgba(255,32,32,0.15)]"
+                        ${tapped ? 'shadow-[0_0_40px_rgba(255,32,32,0.2)]' : 'shadow-[0_0_20px_rgba(255,32,32,0.08)]'}
+                        hover:shadow-[0_0_40px_rgba(255,32,32,0.15)]`}
         >
             {/* Inner card — sits inside the gradient border */}
             <div className="relative h-[280px] md:h-[480px] w-full overflow-hidden rounded-[14px] bg-[#0a0a0a] cursor-pointer">
                 {/* Background gradient layer */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${sector.gradient} opacity-40 group-hover:opacity-60 
+                <div className={`absolute inset-0 bg-gradient-to-br ${sector.gradient} ${tapped ? 'opacity-60' : 'opacity-40'} group-hover:opacity-60 
                                 transition-opacity duration-1000 ease-in-out`} />
 
                 {/* Subtle texture overlay */}
@@ -115,13 +119,22 @@ function CinematicCard({ sector }: { sector: SectorItem }) {
                     }}
                 />
 
-                {/* Zooming image */}
-                <div className="absolute inset-0 scale-100 group-hover:scale-110 transition-transform duration-[2000ms] ease-out">
+                {/* Zooming image — iOS: tap to zoom, Desktop: hover */}
+                <div
+                    className={`absolute inset-0 transition-transform duration-[2000ms] ease-out
+                                ${!ios ? 'scale-100 group-hover:scale-110' : ''}`}
+                    style={ios ? {
+                        transform: tapped ? 'scale(1.08)' : 'scale(1)',
+                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                    } : undefined}
+                >
                     <Image
                         src={sector.imgSrc}
                         alt={sector.title}
                         fill
-                        className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
+                        className={`object-cover transition-opacity duration-700
+                                    ${tapped ? 'opacity-100' : (ios ? 'opacity-95' : 'opacity-90')}
+                                    group-hover:opacity-100`}
                         sizes="(max-width: 768px) 100vw, 50vw"
                         priority={parseInt(sector.id) <= 2}
                     />
@@ -130,8 +143,14 @@ function CinematicCard({ sector }: { sector: SectorItem }) {
                 {/* Content — Glass Card at Bottom */}
                 <div className="absolute bottom-3 left-3 right-3 md:bottom-5 md:left-5 md:right-5 z-10">
                     <div className={`bg-black/80 border border-white/10 rounded-xl p-4 md:p-6
-                                    translate-y-2 group-hover:translate-y-0 transition-transform duration-500
-                                    flex flex-col items-center text-center`}>
+                                    ${!ios ? 'translate-y-2 group-hover:translate-y-0' : ''}
+                                    transition-transform duration-500
+                                    flex flex-col items-center text-center`}
+                        style={ios ? {
+                            transform: tapped ? 'translateY(-4px)' : 'translateY(0)',
+                            transition: 'transform 0.5s ease-out',
+                        } : undefined}
+                    >
                         <h3 className="font-[family-name:var(--font-heading)] text-2xl md:text-4xl font-bold uppercase text-white mb-2 tracking-tighter">
                             {sector.title}
                         </h3>
@@ -142,14 +161,14 @@ function CinematicCard({ sector }: { sector: SectorItem }) {
                 </div>
 
                 {/* Corner accent glow */}
-                <div className="absolute bottom-0 right-0 w-20 h-20 md:w-28 md:h-28
+                <div className={`absolute bottom-0 right-0 w-20 h-20 md:w-28 md:h-28
                                 bg-gradient-to-tl from-[#FF2020]/10 to-transparent
-                                opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-bl-2xl" />
+                                ${tapped ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-700 rounded-bl-2xl`} />
 
                 {/* Top-left corner accent */}
-                <div className="absolute top-0 left-0 w-16 h-16 md:w-20 md:h-20
+                <div className={`absolute top-0 left-0 w-16 h-16 md:w-20 md:h-20
                                 bg-gradient-to-br from-white/5 to-transparent
-                                opacity-0 group-hover:opacity-60 transition-opacity duration-700 rounded-tr-2xl" />
+                                ${tapped ? 'opacity-60' : 'opacity-0'} group-hover:opacity-60 transition-opacity duration-700 rounded-tr-2xl`} />
             </div>
         </div>
     );
