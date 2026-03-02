@@ -398,7 +398,7 @@ export default function Home() {
             className="font-[family-name:var(--font-body)] text-xl md:text-3xl mt-8 md:mt-12 leading-relaxed"
             style={{ animation: 'subtitle-pulse 3s ease-in-out infinite alternate' }}
           >
-            Qisqa registratsiya qoldiring — biznesingizni tahlil qilib, aniq reja beramiz.
+            Ma&apos;lumotlaringizni qoldiring — biznesingizni tahlil qilib aniq reja beramiz.
           </p>
 
           {/* Spacer */}

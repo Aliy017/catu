@@ -119,7 +119,7 @@ export default function WhoWeWorkWith() {
                         Biz kimlar bilan{" "}
                         <span className="text-[#FF2020] drop-shadow-[0_0_30px_rgba(255,32,32,0.4)]">ishlaymiz</span>
                     </h2>
-                    <div ref={listWorkRef} className="flex flex-col items-center gap-5 mb-[12vh]">
+                    <div ref={listWorkRef} className="flex flex-col items-center gap-5">
                         {WORK_WITH.map((item, i) => (
                             <div key={i} className="ios-reveal flex items-center gap-3"
                                 style={{ transitionDelay: `${i * 80}ms` }}>
@@ -130,7 +130,7 @@ export default function WhoWeWorkWith() {
                     </div>
 
                     {/* ── Separator ── */}
-                    <div className="ios-reveal w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-[10vh]" />
+                    <div className="ios-reveal w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent my-[16vh]" />
 
                     {/* ── Biz kimlar bilan ishlamaymiz ── */}
                     <h2 ref={titleDontRef} className="ios-reveal font-[family-name:var(--font-heading)]
