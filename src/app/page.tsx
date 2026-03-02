@@ -104,6 +104,10 @@ export default function Home() {
   const openContact = useCallback(() => setContactOpen(true), []);
   const closeContact = useCallback(() => setContactOpen(false), []);
 
+  /* iOS detection — SSR safe (always false on server, updated on client) */
+  const [iosDevice, setIosDevice] = useState(false);
+  useEffect(() => { setIosDevice(isIOS()); }, []);
+
   /* Fade-in refs — iOS uses IntersectionObserver, others use GSAP ScrollTrigger */
   const fadeRefs = useRef<(HTMLDivElement | null)[]>([]);
   const partnerGridRef = useRef<HTMLDivElement>(null);
@@ -266,22 +270,21 @@ export default function Home() {
           <div className="h-[10vh]" />
           <div ref={partnerGridRef} className="grid grid-cols-2 sm:grid-cols-4 gap-x-5 gap-y-10 md:gap-x-6 md:gap-y-12">
             {partnerLogos.map((logo, i) => {
-              const ios = typeof window !== 'undefined' && isIOS();
               return (
                 <div key={i} className="flex flex-col items-center group">
                   <div className="relative">
                     {/* Blur glow — skip on iOS (GPU heavy) */}
-                    {!ios && (
+                    {!iosDevice && (
                       <div className="absolute inset-0 rounded-full bg-[#FF2020]/25 blur-[20px] scale-105
                                     group-hover:bg-[#FF2020]/50 group-hover:blur-[30px] group-hover:scale-115
                                     transition-all duration-700 ease-out" />
                     )}
                     <div
-                      className={`relative w-20 h-20 md:w-28 md:h-28 rounded-full border ${ios ? 'border-[#FF2020]/30' : 'border-[#FF2020]/40'} ${logo.bg}
+                      className={`relative w-20 h-20 md:w-28 md:h-28 rounded-full border ${iosDevice ? 'border-[#FF2020]/30' : 'border-[#FF2020]/40'} ${logo.bg}
                                 overflow-hidden
-                                ${ios ? '' : 'group-hover:border-[#FF2020]/70 shadow-[0_0_15px_rgba(255,32,32,0.25)] group-hover:shadow-[0_0_40px_rgba(255,32,32,0.4)]'}
+                                ${iosDevice ? '' : 'group-hover:border-[#FF2020]/70 shadow-[0_0_15px_rgba(255,32,32,0.25)] group-hover:shadow-[0_0_40px_rgba(255,32,32,0.4)]'}
                                 transition-all duration-500`}
-                      style={ios ? undefined : { clipPath: 'circle(50%)' }}
+                      style={iosDevice ? undefined : { clipPath: 'circle(50%)' }}
                     >
                       <div className={`absolute ${logo.cover ? 'inset-0' : 'inset-2 md:inset-3'}`}>
                         <Image

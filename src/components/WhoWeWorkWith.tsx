@@ -109,10 +109,10 @@ export default function WhoWeWorkWith() {
     // ─── iOS: premium vertical layout with CSS-driven reveals ───
     if (ios) {
         return (
-            <section ref={sectionRef} className="relative w-full bg-[#050505] overflow-hidden" style={{ paddingTop: 80, paddingBottom: 80 }}>
+            <section ref={sectionRef} className="relative w-full bg-[#050505] overflow-hidden" style={{ paddingTop: 120, paddingBottom: 120 }}>
                 <div ref={glowRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                     w-[300px] h-[300px] rounded-full blur-[80px] bg-[#FF2020]/15 pointer-events-none z-0" />
-                <div className="relative z-20 px-6 max-w-lg mx-auto">
+                <div className="relative z-20 px-8 max-w-2xl mx-auto">
                     {/* ── Biz kimlar bilan ishlaymiz ── */}
                     <h2 ref={titleWorkRef} className="ios-reveal font-[family-name:var(--font-heading)]
                         text-[24px] sm:text-4xl font-bold uppercase text-[#f5f5f5] text-center leading-tight mb-8">
@@ -130,9 +130,9 @@ export default function WhoWeWorkWith() {
                     </div>
 
                     {/* ── Spacer + Separator ── */}
-                    <div style={{ height: 60 }} />
+                    <div style={{ height: 100 }} />
                     <div className="ios-reveal w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                    <div style={{ height: 60 }} />
+                    <div style={{ height: 100 }} />
 
                     {/* ── Biz kimlar bilan ishlamaymiz ── */}
                     <h2 ref={titleDontRef} className="ios-reveal font-[family-name:var(--font-heading)]
