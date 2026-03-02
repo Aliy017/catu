@@ -129,8 +129,10 @@ export default function WhoWeWorkWith() {
                         ))}
                     </div>
 
-                    {/* ── Separator ── */}
-                    <div className="ios-reveal w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent my-[16vh]" />
+                    {/* ── Spacer + Separator ── */}
+                    <div style={{ height: 60 }} />
+                    <div className="ios-reveal w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                    <div style={{ height: 60 }} />
 
                     {/* ── Biz kimlar bilan ishlamaymiz ── */}
                     <h2 ref={titleDontRef} className="ios-reveal font-[family-name:var(--font-heading)]
