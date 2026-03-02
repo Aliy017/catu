@@ -36,39 +36,40 @@ export default function WhoWeWorkWith() {
     useEffect(() => { setIos(isIOS()); }, []);
 
     useEffect(() => {
-        if (!sectionRef.current) return;
+        if (!sectionRef.current || !ios) return;
 
-        if (isIOS()) {
-            // ─── iOS: IntersectionObserver for card + item reveals ───
-            const cards = sectionRef.current.querySelectorAll('.ios-card-reveal');
-            const items = sectionRef.current.querySelectorAll('.ios-item-reveal');
+        // ─── iOS: IntersectionObserver for card + item reveals ───
+        const cards = sectionRef.current.querySelectorAll('.ios-card-reveal');
 
-            // Cards: slide up + fade in
-            const cardObs = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const el = entry.target as HTMLElement;
-                        el.style.opacity = '1';
-                        el.style.transform = 'translateY(0)';
-                        // Trigger child items
-                        el.querySelectorAll('.ios-item-reveal').forEach((item) => {
-                            (item as HTMLElement).style.opacity = '1';
-                            (item as HTMLElement).style.transform = 'translateX(0)';
-                        });
-                        cardObs.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.2 });
-
-            cards.forEach(card => {
-                (card as HTMLElement).style.opacity = '0';
-                (card as HTMLElement).style.transform = 'translateY(40px)';
-                (card as HTMLElement).style.transition = 'opacity 0.7s ease-out, transform 0.7s ease-out';
-                cardObs.observe(card);
+        // Cards: slide up + fade in
+        const cardObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target as HTMLElement;
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                    // Trigger child items
+                    el.querySelectorAll('.ios-item-reveal').forEach((item) => {
+                        (item as HTMLElement).style.opacity = '1';
+                        (item as HTMLElement).style.transform = 'translateX(0)';
+                    });
+                    cardObs.unobserve(entry.target);
+                }
             });
+        }, { threshold: 0.2 });
 
-            return () => cardObs.disconnect();
-        }
+        cards.forEach(card => {
+            (card as HTMLElement).style.opacity = '0';
+            (card as HTMLElement).style.transform = 'translateY(40px)';
+            (card as HTMLElement).style.transition = 'opacity 0.7s ease-out, transform 0.7s ease-out';
+            cardObs.observe(card);
+        });
+
+        return () => cardObs.disconnect();
+    }, [ios]);
+
+    useEffect(() => {
+        if (!sectionRef.current || ios) return;
 
         // ─── Android / Desktop: GSAP pin timeline ───
         let ctx: gsap.Context;
@@ -121,7 +122,7 @@ export default function WhoWeWorkWith() {
         }, 500);
 
         return () => { clearTimeout(timer); ctx?.revert(); };
-    }, []);
+    }, [ios]);
 
     // ─── iOS: premium card-based layout with scroll animations ───
     if (ios) {
