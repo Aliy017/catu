@@ -109,7 +109,7 @@ export default function WhoWeWorkWith() {
     // ─── iOS: premium vertical layout with CSS-driven reveals ───
     if (ios) {
         return (
-            <section ref={sectionRef} className="relative w-full bg-[#050505] overflow-hidden py-[10vh]">
+            <section ref={sectionRef} className="relative w-full bg-[#050505] overflow-hidden" style={{ paddingTop: 80, paddingBottom: 80 }}>
                 <div ref={glowRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                     w-[300px] h-[300px] rounded-full blur-[80px] bg-[#FF2020]/15 pointer-events-none z-0" />
                 <div className="relative z-20 px-6 max-w-lg mx-auto">
