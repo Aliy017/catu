@@ -89,35 +89,39 @@ export default function WhoWeWorkWith() {
                     scrollTrigger: {
                         trigger: sectionRef.current,
                         start: "top top",
-                        end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=100%" : "+=250%",
+                        end: typeof window !== 'undefined' && window.innerWidth < 768 ? "+=80%" : "+=180%",
                         pin: true,
-                        scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.3 : 1,
+                        scrub: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.2 : 0.8,
                         anticipatePin: 1,
                     },
                 });
 
-                tl.to(titleWorkRef.current, { y: 0, opacity: 1, scale: 1, duration: 2, ease: "power3.out" }, 0);
-                tl.to(glowRef.current, { opacity: 0.2, scale: 1, duration: 2, ease: "power2.out" }, 0.5);
+                // Section 1: "ishlaymiz" — appear fast
+                tl.to(titleWorkRef.current, { y: 0, opacity: 1, scale: 1, duration: 1.5, ease: "power3.out" }, 0);
+                tl.to(glowRef.current, { opacity: 0.2, scale: 1, duration: 1.5, ease: "power2.out" }, 0.3);
                 if (listWorkRef.current) {
-                    tl.to(listWorkRef.current.children, { y: 0, opacity: 1, duration: 0.6, stagger: 0.2, ease: "power3.out" }, 2.5);
+                    tl.to(listWorkRef.current.children, { y: 0, opacity: 1, duration: 0.5, stagger: 0.15, ease: "power3.out" }, 1.5);
                 }
-                tl.to({}, { duration: 1 }, 4.5);
-                tl.to(titleWorkRef.current, { y: -80, opacity: 0, duration: 1.2, ease: "power2.in" }, 6.5);
+                tl.to({}, { duration: 0.5 }, 2.8);
+                // Section 1: exit
+                tl.to(titleWorkRef.current, { y: -60, opacity: 0, duration: 0.8, ease: "power2.in" }, 3.3);
                 if (listWorkRef.current) {
-                    tl.to(listWorkRef.current.children, { y: -30, opacity: 0, stagger: 0.06, duration: 0.4, ease: "power2.in" }, 6.5);
+                    tl.to(listWorkRef.current.children, { y: -20, opacity: 0, stagger: 0.04, duration: 0.3, ease: "power2.in" }, 3.3);
                 }
-                tl.to(glowRef.current, { opacity: 0.06, duration: 1 }, 7);
-                tl.set(listDontRef.current, { visibility: "visible" }, 7.5);
-                tl.to(titleDontRef.current, { y: 0, opacity: 1, scale: 1, duration: 1.5, ease: "power3.out" }, 7.5);
+                tl.to(glowRef.current, { opacity: 0.06, duration: 0.6 }, 3.5);
+                // Section 2: "ishlamaymiz" — enter immediately
+                tl.set(listDontRef.current, { visibility: "visible" }, 4);
+                tl.to(titleDontRef.current, { y: 0, opacity: 1, scale: 1, duration: 1.2, ease: "power3.out" }, 4);
                 if (listDontRef.current) {
-                    tl.to(listDontRef.current.children, { y: 0, opacity: 1, duration: 0.5, stagger: 0.15, ease: "power3.out" }, 8);
+                    tl.to(listDontRef.current.children, { y: 0, opacity: 1, duration: 0.4, stagger: 0.12, ease: "power3.out" }, 4.5);
                 }
-                tl.to({}, { duration: 1 }, 10);
-                tl.to(titleDontRef.current, { y: -60, opacity: 0, duration: 1, ease: "power2.in" }, 12);
+                tl.to({}, { duration: 0.5 }, 6);
+                // Section 2: exit
+                tl.to(titleDontRef.current, { y: -40, opacity: 0, duration: 0.8, ease: "power2.in" }, 6.5);
                 if (listDontRef.current) {
-                    tl.to(listDontRef.current.children, { y: -20, opacity: 0, stagger: 0.05, duration: 0.4, ease: "power2.in" }, 12);
+                    tl.to(listDontRef.current.children, { y: -15, opacity: 0, stagger: 0.04, duration: 0.3, ease: "power2.in" }, 6.5);
                 }
-                tl.to(glowRef.current, { opacity: 0, duration: 1 }, 12.2);
+                tl.to(glowRef.current, { opacity: 0, duration: 0.6 }, 6.8);
             }, sectionRef);
         }, 500);
 

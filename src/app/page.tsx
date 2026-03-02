@@ -307,7 +307,7 @@ export default function Home() {
             })}
           </div>
         </div>
-        <div style={{ marginTop: '40vh' }} className="text-center">
+        <div style={{ marginTop: 'clamp(60px, 15vh, 25vh)' }} className="text-center">
           <h3 className="font-[family-name:var(--font-heading)] text-2xl md:text-5xl lg:text-6xl font-bold uppercase mb-[5vh]">
             <span className="bg-clip-text text-transparent bg-gradient-to-b from-white from-30% to-[#FF2020]">
               Biz butun O'zbekiston bo'ylab
@@ -316,7 +316,7 @@ export default function Home() {
               ishlaymiz
             </span>
           </h3>
-          <div className="hidden md:block h-[5vh]" />
+          <div className="hidden md:block h-[2vh]" />
           <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#FF2020]/50 to-transparent" />
         </div>
       </section>

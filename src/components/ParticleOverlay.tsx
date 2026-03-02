@@ -27,8 +27,8 @@ function createParticles(w: number, h: number): Particle[] {
         y: Math.random() * h,
         vx: (Math.random() - 0.5) * SPEED,
         vy: (Math.random() - 0.5) * SPEED * 0.6,
-        radius: 1 + Math.random() * 1.5,
-        opacity: 0.15 + Math.random() * 0.25,
+        radius: 0.6 + Math.random() * 1.2,
+        opacity: 0.08 + Math.random() * 0.12,
     }));
 }
 
@@ -109,7 +109,7 @@ export default function ParticleOverlay() {
         <canvas
             ref={canvasRef}
             className="fixed inset-0 pointer-events-none z-10"
-            style={{ opacity: 0.7 }}
+            style={{ opacity: 0.5 }}
             aria-hidden="true"
         />
     );
